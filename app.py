@@ -11,6 +11,7 @@ import os
 import sys
 from authlib.flask.client import OAuth
 from flask import Flask, jsonify, session, redirect, render_template, url_for
+from flask_navbar.elements import Navbar, View
 from six.moves.urllib.parse import urlencode
 
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
@@ -88,6 +89,7 @@ def callback_handling():
     userinfo = resp.json()
 
     # Store the user information in flask session.
+    session['logged_in'] = True
     session['jwt_payload'] = userinfo
     session['profile'] = {
         'user_id': userinfo['sub'],
@@ -96,12 +98,12 @@ def callback_handling():
     }
 
     # Redirect to the user's dashboard
-    return redirect('/dashboard')
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/dashboard')
 @requires_auth
-def show_dashboard():
+def dashboard():
     return jsonify({'success': 'this is the dashboard for a user', 'profile': session['profile']})
 
 

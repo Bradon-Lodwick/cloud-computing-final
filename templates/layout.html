@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} | Student Profile Viewer</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- Assures proper loading on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<!-- navigation start -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Student Profile Viewer</a>
+        </div>
+        <ul class="nav navbar-nav">
+            {% if request.path == url_for('home') %}
+            <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+            {% else %}
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+            {% if not session.logged_in  %}
+            <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% else %}}
+            <li><p class="navbar-text">Welcome {{ session['profile']['name'] }}</p></li>
+            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            {% endif %}
+        </ul>
+  </div>
+</nav>
+<!-- navigation end -->
+{% block content %}
+{% endblock %}
+</body>
+
+<!-- place all javascript files here -->
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</html>
