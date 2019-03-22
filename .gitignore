@@ -1,4 +1,9 @@
+# Ignore the virtual environment
 venv/
+*.pyc
+# Ignore the log file for the application
+app.log
+
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
