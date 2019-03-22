@@ -11,7 +11,6 @@ import os
 import sys
 from authlib.flask.client import OAuth
 from flask import Flask, jsonify, session, redirect, render_template, url_for
-from flask_navbar.elements import Navbar, View
 from six.moves.urllib.parse import urlencode
 
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
