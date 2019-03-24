@@ -12,6 +12,7 @@ idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.1
+marshmallow==2.19.1
 marshmallow-mongoengine==0.9.1
 mock==2.0.0
 mongoengine==0.17.0
