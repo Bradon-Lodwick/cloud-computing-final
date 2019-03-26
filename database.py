@@ -20,7 +20,7 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 class Portfolio(me.EmbeddedDocument):
     """Represents a portfolio in the database."""
-    _id = me.ObjectIdField(required=True, default=lambda: ObjectId(), primary_key=True)
+    _id = me.ObjectIdField(required=True, default=ObjectId, primary_key=True)
     description = me.StringField(required=True, max_length=500)
 
 
@@ -30,12 +30,57 @@ class PortfolioSchema(ma.ModelSchema):
     email = ma.fields.Email()
 
 
-class User(me.Document):
+class Identity(me.DynamicEmbeddedDocument):
+    """Represents an identity the user connects with in the database."""
+    provider = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
+    user_id = me.StringField(required=True)
+    isSocial = me.BooleanField(required=True, default=False)
+    connection = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
+
+
+class User(me.DynamicDocument):
     """Represents a user in the database."""
-    name = me.StringField(required=True, max_length=50)
+    # Generic data from normalized fields
+    name = me.StringField(required=True)
+    nickname = me.StringField(required=False)
+    picture = me.URLField(required=True)
+    user_id = me.StringField(required=True)
     email = me.EmailField(required=True)
-    portfolios = me.ListField(me.EmbeddedDocumentField(Portfolio))
+    email_verified = me.BooleanField(required=True, default=False)
+    given_name = me.StringField()
+    family_name = me.StringField()
+
+    # Identities are used to tell which service the user signed up with
+    identities = me.EmbeddedDocumentListField(Identity)
+
+    # Github related fields
+    url = me.URLField()  # API URL
+    html_url = me.URLField()  # PROFILE URL
+    repos_url = me.URLField()
     meta = {'collection': 'users'}
+
+    def __repr__(self):
+        """Default representation for the user object."""
+        return '<User: {}>'.format(self.pk)
+
+    def has_identity(self, provider):
+        """Checks if the user has an identity from the given provider.
+
+        Args:
+            provider (str): The provider to check for.
+
+        Returns:
+            bool: If the user has an identity from the given provider.
+        """
+        return any(provider == identity['provider'] for identity in self.identities)
+
+    @property
+    def is_github_user(self):
+        return self.has_identity('github')
+
+    @property
+    def is_google_user(self):
+        return self.has_identity('google-oauth2')
 
 
 class UserSchema(ma.ModelSchema):
