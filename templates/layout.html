@@ -9,6 +9,9 @@
 
     <!-- Assures proper loading on mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Load the custom css sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
 </head>
 <body>
 
@@ -17,8 +20,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Student Profile Viewer</a>
-        </div>
-        <ul class="nav navbar-nav">
+        </div> <ul class="nav navbar-nav">
             {% if request.path == url_for('home') %}
             <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
             {% else %}
@@ -30,8 +32,8 @@
             {% if not session.logged_in  %}
             <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            {% else %}}
-            <li><p class="navbar-text">Welcome {{ session['profile']['name'] }}</p></li>
+            {% else %}
+            <li><a href="{{ url_for('dashboard') }}"><img src="{{ session.profile.picture }}" class="profile-picture"/> {{ session['profile']['name'] }}</a></li>
             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
             {% endif %}
         </ul>

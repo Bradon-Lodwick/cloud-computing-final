@@ -65,12 +65,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Clears the session data.
-
-    TODO:
-        * follow this link for the logout info function:
-            https://manage.auth0.com/#/applications/zV2g9mw7x11MQnQoyZ0jt0iXRl86JHrx/quickstart
-    """
+    """Clears the session data."""
 
     # Clear all of the user's session data
     session.clear()
@@ -103,7 +98,12 @@ def callback_handling():
 @app.route('/dashboard')
 @requires_auth
 def dashboard():
-    return jsonify({'success': 'this is the dashboard for a user', 'profile': session['profile']})
+
+    # Check to make sure the user is logged in
+    if not session['logged_in']:
+        return redirect(url_for('home'))
+    else:
+        return render_template('dashboard.html')
 
 
 # Run the app if this is the main file
