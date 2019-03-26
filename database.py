@@ -18,10 +18,25 @@ MONGODB_DB = os.environ.get('MONGODB_DB')
 conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
+class PortfolioItems(me.EmbeddedDocument):
+    pass
+
+
+class School(me.EmbeddedDocument):
+    """Defines a school object for user education list."""
+
+
+# The list of skills that can be used
+skills_list = ['programming', 'art', 'web_design']
+
+
 class Portfolio(me.EmbeddedDocument):
     """Represents a portfolio in the database."""
     _id = me.ObjectIdField(required=True, default=ObjectId, primary_key=True)
+    tag_line = me.StringField(required=True)
     description = me.StringField(required=True, max_length=500)
+    skills = me.ListField(me.StringField(choices=skills_list))
+    education = me.EmbeddedDocument(School)
 
 
 class PortfolioSchema(ma.ModelSchema):
@@ -59,6 +74,10 @@ class User(me.DynamicDocument):
     repos_url = me.URLField()
     meta = {'collection': 'users'}
 
+    # Portfolio items
+    portfolios = me.EmbeddedDocumentListField(Portfolio)
+    featured_portfolio = me.EmbeddedDocument(Portfolio)
+
     def __repr__(self):
         """Default representation for the user object."""
         return '<User: {}>'.format(self.pk)
@@ -87,3 +106,26 @@ class UserSchema(ma.ModelSchema):
     """Marshmallow schema for the User class."""
     class Meta:
         model = User
+
+
+""" 
+TODO Add the following fields for the user/portfolio
+tagline
+[skills]
+[education]
+    school
+    degree
+    [awards]
+[work history]
+    location
+        name
+        address
+    position
+    start_date
+    end_date
+resume_link
+featured_photo
+[showcase_items] <- This would be for repos, images, markdown text, etc
+[awards]
+website
+"""
