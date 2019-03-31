@@ -10,9 +10,10 @@ import logging
 import os
 import sys
 from authlib.flask.client import OAuth
-from flask import Flask, jsonify, session, redirect, render_template, url_for, request
+from flask import Flask, session, redirect, render_template, url_for, request
 from six.moves.urllib.parse import urlencode
 
+import database as db
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
 from security.authorization import requires_auth
 
@@ -48,6 +49,12 @@ auth0 = oauth.register(
         'scope': 'openid profile'
     },
 )
+
+
+def get_current_user():
+    """Retrieves the current session's user from the database."""
+
+    return db.User.objects(user_id=session['profile']['user_id'])[0]
 
 
 @app.route('/')
@@ -105,9 +112,13 @@ def edit_dashboard():
         return redirect(url_for('home'))
     else:
         if request.method == 'GET':
-            return render_template('edit.html', skills=constants.skills)
+            # Get the user's information from the database
+            user = get_current_user()
+            # Pass the user to the edit page to be displayed
+            return render_template('edit.html', skills=constants.skills, user=user)
         elif request.method == 'POST':
-            # TODO add things here for POST request, saving Profile Info to DB
+            # Get the information from the post
+            pass
             return redirect(url_for('dashboard'))
 
 

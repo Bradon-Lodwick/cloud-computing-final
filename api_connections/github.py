@@ -27,7 +27,7 @@ class Repo(me.DynamicEmbeddedDocument):
     # Needs to be loaded from the contributors url
     contributions = me.IntField(required=True)
 
-    def __init__(self, url, user_id, **kwargs):
+    def __init__(self, url, user_id=None, **kwargs):
         """Creates a new repo from the given url.
 
         Args:
@@ -39,7 +39,7 @@ class Repo(me.DynamicEmbeddedDocument):
         """
 
         # Get the repo information
-        if url is not None:
+        if user_id is not None:
             # Get the repo information
             repo_result = request('GET', url)
             repo_json = repo_result.json()

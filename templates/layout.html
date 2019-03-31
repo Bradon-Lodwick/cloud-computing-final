@@ -19,7 +19,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Student Profile Viewer</a>
+            <a class="navbar-brand" href="{{ url_for('home') }}">Student Profile Viewer</a>
         </div> <ul class="nav navbar-nav">
             {% if request.path == url_for('home') %}
             <li class="active"><a href="{{ url_for('home') }}">Home</a></li>

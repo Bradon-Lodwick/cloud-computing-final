@@ -64,7 +64,6 @@ class Work(me.EmbeddedDocument):
 class Identity(me.DynamicEmbeddedDocument):
     """Represents an identity the user connects with in the database."""
     provider = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
-    user_id = me.DynamicField(required=True)
     isSocial = me.BooleanField(required=True, default=False)
     connection = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
 
@@ -74,13 +73,15 @@ class User(me.DynamicDocument):
     _id = me.StringField(required=True, primary_key=True)
     # Generic data from auth0 normalized fields
     name = me.StringField(required=True)
-    nickname = me.StringField(required=False)
     picture = me.URLField(required=True)
-    user_id = me.StringField(required=True)
+    user_id = me.StringField(required=True, unique=True)
     email = me.EmailField(required=True)
     email_verified = me.BooleanField(required=True, default=False)
     given_name = me.StringField()
     family_name = me.StringField()
+
+    # Personalized information for the student profile to use
+    # TODO place all the duplicate info from auth0 here, so it is not overwritten
 
     # Identities are used to tell which service the user signed up with
     identities = me.EmbeddedDocumentListField(Identity)
@@ -92,6 +93,7 @@ class User(me.DynamicDocument):
     meta = {'collection': 'users'}
 
     # Generic information for portfolio
+    description = me.StringField()
     tagline = me.StringField(max_length=280)
     skills = me.ListField(me.StringField(choices=possible_skills))
 
