@@ -13,6 +13,7 @@ from bson.objectid import ObjectId
 from api_connections.github import Repo
 from api_connections.cloudinary import File
 
+import constants as const
 import exc
 
 # Get the uri to use to connect to mongodb
@@ -95,7 +96,7 @@ class User(me.DynamicDocument):
     # Generic information for portfolio
     description = me.StringField()
     tagline = me.StringField(max_length=280)
-    skills = me.ListField(me.StringField(choices=possible_skills))
+    skills = me.ListField(me.StringField(choices=const.skills))
 
     # Allows the user to store their schooling information
     education = me.EmbeddedDocumentListField(School)

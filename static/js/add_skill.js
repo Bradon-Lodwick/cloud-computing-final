@@ -22,7 +22,7 @@ function add_skill(entry, arr){
     b.setAttribute("class", 'displayed_skills_text')
 
     /*insert a input field that will hold the current array item's value:*/
-    b.innerHTML += "<input type='hidden' name='skill_" + this.id + "' value='" + entry_val + "'>";
+    b.innerHTML += "<input type='hidden' name='skills[]' value='" + entry_val + "'>";
     /*execute a function when someone clicks on the item value (DIV element):*/
     a.appendChild(b);
   } else {
