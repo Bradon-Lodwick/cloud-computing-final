@@ -8,7 +8,7 @@
     <h1>Edit Profile</h1>
   	<hr>
     <div class="row">
-        <form action="{{ url_for('edit_dashboard') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url_for('edit_dashboard') }}" autocomplete="off" method="POST" enctype="multipart/form-data">
             <div class="col-md-3">
                 <div class="text-center">
                     <img  id="profile_img_edit" src="{{ session.profile.picture }}" class="img-circle img-responsive" style="overflow: hidden;" alt="Profile Picture">

@@ -1,7 +1,7 @@
 function add_skill(entry, arr){
   var a, b, i, val = this.value;
   entry_val = entry.value
-  if (arr.includes(entry_val) && !entry.parentNode.contains(document.getElementById(entry_val + "skills_added"))){
+  if (arr.includes(entry_val) && !entry.parentNode.parentNode.contains(document.getElementById(entry_val + "skills_added"))){
     /* if the entered value is one of the skills */
     console.log("Valid Skill")
 
@@ -14,7 +14,7 @@ function add_skill(entry, arr){
         remove_skill(a)
     });
 
-    entry.parentNode.appendChild(a);
+    entry.parentNode.parentNode.appendChild(a);
 
     b = document.createElement("div");
     //Display the completed word (based on autofill entries)
