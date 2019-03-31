@@ -16,6 +16,8 @@ from six.moves.urllib.parse import urlencode
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
 from security.authorization import requires_auth
 
+import constants
+
 # The callback url for Auth0
 CALLBACK_URL = os.environ.get('AUTH0_CALLBACK_URL')
 
@@ -32,7 +34,6 @@ app = Flask(__name__)
 app.config.from_mapping(
     SECRET_KEY=os.environ.get('SECRET_KEY')
 )
-
 
 # Create the OAuth app for Auth0
 oauth = OAuth(app)
@@ -104,7 +105,7 @@ def edit_dashboard():
         return redirect(url_for('home'))
     else:
         if request.method == 'GET':
-            return render_template('edit.html')
+            return render_template('edit.html', skills=constants.skills)
         elif request.method == 'POST':
             # TODO add things here for POST request, saving Profile Info to DB
             return redirect(url_for('dashboard'))
