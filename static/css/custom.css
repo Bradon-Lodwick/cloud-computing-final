@@ -61,6 +61,19 @@
   color: #ffffff;
 }
 
+.skills_container {
+    display: inline-block;
+    overflow: hidden;
+}
+
 .displayed_skills {
     background-color: DodgerBlue;
+    border-radius: 15px;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.displayed_skills_text {
+    color: white;
 }
