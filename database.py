@@ -10,6 +10,10 @@ import os
 import marshmallow_mongoengine as ma
 import mongoengine as me
 from bson.objectid import ObjectId
+from api_connections.github import Repo
+from api_connections.cloudinary import File
+
+import exc
 
 # Get the uri to use to connect to mongodb
 MONGODB_URI = os.environ.get('MONGODB_URI')
@@ -18,44 +22,57 @@ MONGODB_DB = os.environ.get('MONGODB_DB')
 conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
-class PortfolioItems(me.EmbeddedDocument):
-    pass
+possible_skills = ['programming', 'graphic design', 'full-stack development', 'leader', 'communication']
+
+
+class PortfolioItem(me.EmbeddedDocument):
+    _id = me.ObjectIdField()
+    item_type = me.StringField(choices=['repo', 'image', 'pdf', 'file', 'youtube', None])
+    title = me.StringField()
+    description = me.StringField()
+
+    # The given portfolio item types should only have 1 present, and the type will be loaded based on the item_type
+    repo = me.EmbeddedDocumentField(Repo)
+    file = me.EmbeddedDocumentField(File)
+    youtube = me.URLField()
 
 
 class School(me.EmbeddedDocument):
     """Defines a school object for user education list."""
+    name = me.StringField(required=True)
+    degree = me.StringField(required=True)
+    image = me.URLField()
+    url = me.URLField()
 
 
-# The list of skills that can be used
-skills_list = ['programming', 'art', 'web_design']
+class Awards(me.EmbeddedDocument):
+    """Defines any awards the user wants to showcase."""
+    name = me.StringField(required=True)
+    image = me.URLField()
+    url = me.URLField()
 
 
-class Portfolio(me.EmbeddedDocument):
-    """Represents a portfolio in the database."""
-    _id = me.ObjectIdField(required=True, default=ObjectId, primary_key=True)
-    tag_line = me.StringField(required=True)
-    description = me.StringField(required=True, max_length=500)
-    skills = me.ListField(me.StringField(choices=skills_list))
-    education = me.EmbeddedDocument(School)
-
-
-class PortfolioSchema(ma.ModelSchema):
-    """Marshmallow schema for the Portfolio class."""
-    user = ma.fields.Str()
-    email = ma.fields.Email()
+class Work(me.EmbeddedDocument):
+    name = me.StringField(required=True, max_length=40)
+    image = me.URLField()
+    url = me.URLField()
+    position = me.StringField()
+    start_date = me.DateField(required=True)
+    end_date = me.DateField()
 
 
 class Identity(me.DynamicEmbeddedDocument):
     """Represents an identity the user connects with in the database."""
     provider = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
-    user_id = me.StringField(required=True)
+    user_id = me.DynamicField(required=True)
     isSocial = me.BooleanField(required=True, default=False)
     connection = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
 
 
 class User(me.DynamicDocument):
     """Represents a user in the database."""
-    # Generic data from normalized fields
+    _id = me.StringField(required=True, primary_key=True)
+    # Generic data from auth0 normalized fields
     name = me.StringField(required=True)
     nickname = me.StringField(required=False)
     picture = me.URLField(required=True)
@@ -74,9 +91,21 @@ class User(me.DynamicDocument):
     repos_url = me.URLField()
     meta = {'collection': 'users'}
 
-    # Portfolio items
-    portfolios = me.EmbeddedDocumentListField(Portfolio)
-    featured_portfolio = me.EmbeddedDocument(Portfolio)
+    # Generic information for portfolio
+    tagline = me.StringField(max_length=280)
+    skills = me.ListField(me.StringField(choices=possible_skills))
+
+    # Allows the user to store their schooling information
+    education = me.EmbeddedDocumentListField(School)
+
+    # Allows the user to store any awards they want displayed on their page
+    awards = me.EmbeddedDocumentField(Awards)
+
+    # Allows the user to store their previous work history
+    work_history = me.EmbeddedDocumentListField(Work)
+
+    # Portfolio holds a list of portfolio items for their page
+    portfolio = me.EmbeddedDocumentListField(PortfolioItem)
 
     def __repr__(self):
         """Default representation for the user object."""
@@ -101,31 +130,33 @@ class User(me.DynamicDocument):
     def is_google_user(self):
         return self.has_identity('google-oauth2')
 
+    @property
+    def github_identity(self):
+        """Gets the user's github identity"""
+        if self.is_github_user:
+            return next(identity for identity in self.identities if identity.provider == 'github')
+        else:
+            return None
+
+    def add_repo(self, url):
+        """Adds a repo to the user's portfolio items.
+
+        Args:
+            url (str): The url to the repo.
+        """
+
+        # Only can add the repo if the user is a github user
+        if self.is_github_user:
+            new_repo = Repo(url, self.github_identity.user_id)
+            new_item = PortfolioItem(item_type='repo', repo=new_repo)
+
+            self.portfolio.append(new_item)
+            self.save()
+        else:
+            raise exc.IdentityError(self.user_id, 'github')
+
 
 class UserSchema(ma.ModelSchema):
     """Marshmallow schema for the User class."""
     class Meta:
         model = User
-
-
-""" 
-TODO Add the following fields for the user/portfolio
-tagline
-[skills]
-[education]
-    school
-    degree
-    [awards]
-[work history]
-    location
-        name
-        address
-    position
-    start_date
-    end_date
-resume_link
-featured_photo
-[showcase_items] <- This would be for repos, images, markdown text, etc
-[awards]
-website
-"""
