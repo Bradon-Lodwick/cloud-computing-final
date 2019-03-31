@@ -10,7 +10,7 @@ import logging
 import os
 import sys
 from authlib.flask.client import OAuth
-from flask import Flask, jsonify, session, redirect, render_template, url_for
+from flask import Flask, jsonify, session, redirect, render_template, url_for, request
 from six.moves.urllib.parse import urlencode
 
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
@@ -93,6 +93,21 @@ def callback_handling():
 
     # Redirect to the user's dashboard
     return redirect(url_for('dashboard'))
+
+
+@app.route('/dashboard/edit', methods=["GET", "POST"])
+@requires_auth
+def edit_dashboard():
+
+    # Check to make sure the user is logged in
+    if not session['logged_in']:
+        return redirect(url_for('home'))
+    else:
+        if request.method == 'GET':
+            return render_template('edit.html')
+        elif request.method == 'POST':
+            # TODO add things here for POST request, saving Profile Info to DB
+            return redirect(url_for('dashboard'))
 
 
 @app.route('/dashboard')

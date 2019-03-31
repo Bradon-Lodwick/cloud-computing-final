@@ -2,3 +2,30 @@
     height: 30px;
     border-radius: 50%;
 }
+
+.profile-body-text {
+    font-size:2vw
+}
+
+.profile-body {
+  margin-left: 12%;
+  margin-right: 12%;
+}
+
+.profile-information-container {
+    background-color: grey;
+}
+
+.profile-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.profile-name {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.edit-profile-row {
+    margin-top: 10px;
+}

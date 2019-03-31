@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+{% block title %}
+{{ session.profile.name }}'s dashboard | Student Profile Viewer
+{% endblock %}
+
+{% block content %}
+<body class="profile-body">
+    <h1>Edit Profile</h1>
+  	<hr>
+    <div class="row">
+      <!-- image edit TODO Move this -->
+        <div class="col-md-3">
+            <div class="text-center">
+                <img  id="profile_img_edit" src="{{ session.profile.picture }}" class="img-circle img-responsive" style="overflow: hidden;" alt="Profile Picture">
+            </div>
+            <br>
+            <p>Upload a different Profile Picture:</p>
+            <form id="img_change">
+                <input type="file" id="upload_image" accept="image/*" onchange="loadFile(event)" class="form-control"/>
+                <script>
+                    var loadFile = function(event) {
+                      var output = document.getElementById('profile_img_edit');
+                      output.src = URL.createObjectURL(event.target.files[0]);
+                    };
+                </script>
+            </form>
+        </div>
+
+        <!-- TODO Figure out What Action to Put Here-->
+        <form action="{{ url_for('edit_dashboard') }}" method="POST">
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Preferred Name:</label>
+                <div class="col-lg-8">
+                    <input id="nickname" class="form-control" type="text" value="">
+                </div>
+            </div>
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Email:</label>
+                <div class="col-lg-8">
+                    <input id="email" class="form-control" type="text" value="">
+                </div>
+            </div>
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Profile Overview:</label>
+                <div class="col-lg-8">
+                    <textarea onkeyup="textCounter(this,'desc_chars_left',150);" id="description" class="form-control" rows="3" cols="30" maxlength="150"></textarea>
+                    <p id="desc_chars_left"></p>
+                </div>
+                <script>
+                    function textCounter(field,field2,maxlimit)
+                    {
+                     var count_display = document.getElementById(field2);
+                     if (field.value.length == 0){
+                        count_display.innerHTML = ""
+                     } else if ( field.value.length <= maxlimit ) {
+                      count_display.innerHTML = "Characters Remaining: " + (maxlimit - field.value.length);
+                     }
+                    }
+                </script>
+            </div>
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Given Name:</label>
+                <div class="col-lg-8">
+                    <input id="given_name" class="form-control" type="text" value="">
+                </div>
+            </div>
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Family Name:</label>
+                <div class="col-lg-8">
+                    <input id="family_name" class="form-control" type="text" value="">
+                </div>
+            </div>
+            <div class="col-md-9 edit-profile-row">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</body>
+
+{% endblock %}
