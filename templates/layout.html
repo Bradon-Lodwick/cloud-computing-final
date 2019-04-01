@@ -38,7 +38,7 @@
             {% else %}
             <li><a href="{{ url_for('dashboard') }}"><img src="{{ session.profile.picture }}" class="profile-picture"/> {{ session['profile']['name'] }}</a></li>
             {% endif %}
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-text">Log Out</a></li>
             {% endif %}
         </ul>
   </div>

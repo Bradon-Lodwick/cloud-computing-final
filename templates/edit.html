@@ -63,6 +63,11 @@
                 </button>
                 {% endfor %}
             </div>
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Awards:</label>
+                <button type="button" onclick="add_award_handler()" id="add_award_button" class="btn btn-primary">Add</button>
+            </div>
+            <br>
             <input type="submit" value="Submit" class="btn btn-primary btn-large">
         </form>
     </div>
@@ -71,9 +76,16 @@
 <script src="{{ url_for('static', filename='js/text_counter.js') }}"></script>
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add_skill.js') }}"></script>
+<script src="{{ url_for('static', filename='js/add_award.js') }}"></script>
 <script>
     var skills = {{ skills | tojson }};
     autocomplete(document.getElementById("skills_text_input"), skills);
+
+    var num_awards = 0;
+    function add_award_handler(){
+        num_awards += 1;
+        add_award(document.getElementById("add_award_button"), num_awards);
+    }
 
     function add_skill_handler(){
         add_skill(document.getElementById("skills_text_input"), skills);
