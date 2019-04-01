@@ -39,20 +39,22 @@ class School(me.EmbeddedDocument):
     """Defines a school object for user education list."""
     name = me.StringField(required=True)
     degree = me.StringField(required=True)
-    image = me.URLField()
     url = me.URLField()
+    start_date = me.DateField(required=True)
+    end_date = me.DateField()
 
 
-class Awards(me.EmbeddedDocument):
+class Award(me.EmbeddedDocument):
     """Defines any awards the user wants to showcase."""
     name = me.StringField(required=True)
-    image = me.URLField()
-    url = me.URLField()
+    description = me.StringField()
+    date = me.DateField()
+    issuer = me.StringField()
+    associated_with = me.StringField(choices=['School', 'Word', 'Volunteer', 'Other'])
 
 
 class Work(me.EmbeddedDocument):
     name = me.StringField(required=True, max_length=40)
-    image = me.URLField()
     url = me.URLField()
     position = me.StringField()
     start_date = me.DateField(required=True)
@@ -100,7 +102,7 @@ class User(me.DynamicDocument):
     education = me.EmbeddedDocumentListField(School)
 
     # Allows the user to store any awards they want displayed on their page
-    awards = me.EmbeddedDocumentField(Awards)
+    awards = me.EmbeddedDocumentField(Award)
 
     # Allows the user to store their previous work history
     work_history = me.EmbeddedDocumentListField(Work)
