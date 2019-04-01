@@ -102,7 +102,7 @@ class User(me.DynamicDocument):
     education = me.EmbeddedDocumentListField(School)
 
     # Allows the user to store any awards they want displayed on their page
-    awards = me.EmbeddedDocumentField(Award)
+    awards = me.EmbeddedDocumentListField(Award)
 
     # Allows the user to store their previous work history
     work_history = me.EmbeddedDocumentListField(Work)
