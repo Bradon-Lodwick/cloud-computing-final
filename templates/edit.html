@@ -56,8 +56,14 @@
                     <input style="float: right;" id="skills_text_input" class="form-control" type="text" placeholder="Skill">
                     <br>
                 </div>
+                {% for skill in user.skills %}
+                <button id="{{ skill }}skills_added" class="displayed_skills col-sm-3" type="button" onclick="remove_skill(this)">
+                    <div class="displayed_skills_text">{{ skill }}<input type="hidden" name="skills[]" value="Team Player">
+                    </div>
+                </button>
+                {% endfor %}
             </div>
-                <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="btn btn-primary btn-large">
         </form>
     </div>
 </div>

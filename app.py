@@ -132,10 +132,9 @@ def edit_dashboard():
                 if old_profile_pic is not None:
                     old_profile_pic.delete()
             # Check for skill updates
-            skills = request.form.getlist('skills')
-            if len(skills) > 0:
-                # TODO replace all skills in the database
-                pass
+            skills = request.form.getlist('skills[]')
+            # Replace all skills in the database
+            user.skills = skills
             # Get the text information from the form
             data = request.form
             # Pass the data into the user object to update
