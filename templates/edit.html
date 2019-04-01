@@ -58,12 +58,14 @@
                 {% endfor %}
             </div>
             <div class="col-md-9 edit-profile-row">
-                <label class="col-lg-3 control-label">Awards:</label>
-                <br>
-                <button type="button" onclick="add_award_handler()" id="add_award_button" style="float: left;" class="btn btn-primary">Add</button>
+                <label class="col-lg-1 control-label">Awards:</label>
+                <button type="button" onclick="add_award_handler()" id="add_award_button" style="float: left; col-lg-1" class="btn btn-primary">Add</button>
             </div>
             <br>
-            <input type="submit" value="Submit" class="btn btn-primary btn-large">
+            <div class="col-md-3"></div>
+            <div class="col-md-9 edit-profile-row">
+                <input type="submit" value="Submit" class="btn btn-primary btn-large">
+            </div>
         </form>
     </div>
 </div>
