@@ -91,13 +91,16 @@ def callback_handling():
     resp = auth0.get('userinfo')
     userinfo = resp.json()
 
+    # Get the user from the mongodb database
+    user = db.User.objects.get(user_id=userinfo['sub'])
+
     # Store the user information in flask session.
     session['logged_in'] = True
     session['jwt_payload'] = userinfo
     session['profile'] = {
-        'user_id': userinfo['sub'],
-        'name': userinfo['name'],
-        'picture': userinfo['picture']
+        'user_id': user.user_id,
+        'name': user.name_normalized,
+        'picture': user.picture_normalized_url
     }
 
     # Redirect to the user's dashboard
@@ -125,9 +128,9 @@ def edit_dashboard():
                 key = 'users/{}/profile-picture-{}'.format(user.user_id, datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
                 new_profile_pic = File(picture, key)
                 # Get old image info from database
-                old_profile_pic = user.profile_picture
+                old_profile_pic = user.picture_editable
                 # Update new image in database
-                user.profile_picture = new_profile_pic
+                user.picture_editable = new_profile_pic
                 # Delete old pic from cloudinary
                 if old_profile_pic is not None:
                     old_profile_pic.delete()
@@ -140,6 +143,12 @@ def edit_dashboard():
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
             user.save()
+            # Update the session info
+            session['profile'] = {
+                'user_id': user.user_id,
+                'name': user.name_normalized,
+                'picture': user.picture_normalized_url
+            }
             return redirect(url_for('dashboard'))
 
 

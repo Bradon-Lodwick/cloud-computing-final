@@ -79,7 +79,6 @@ class User(me.DynamicDocument):
     family_name = me.StringField()
 
     # Personalized information for the student profile to use
-    # TODO place all the duplicate info from auth0 here, so it is not overwritten
     picture_editable = me.EmbeddedDocumentField(File)
     given_name_editable = me.StringField()
     family_name_editable = me.StringField()
