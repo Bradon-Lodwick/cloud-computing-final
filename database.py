@@ -83,7 +83,9 @@ class User(me.DynamicDocument):
 
     # Personalized information for the student profile to use
     # TODO place all the duplicate info from auth0 here, so it is not overwritten
-    profile_picture = me.EmbeddedDocumentField(File)
+    picture_editable = me.EmbeddedDocumentField(File)
+    given_name_editable = me.StringField()
+    family_name_editable = me.StringField()
 
     # Identities are used to tell which service the user signed up with
     identities = me.EmbeddedDocumentListField(Identity)
@@ -126,6 +128,31 @@ class User(me.DynamicDocument):
             bool: If the user has an identity from the given provider.
         """
         return any(provider == identity['provider'] for identity in self.identities)
+
+    @property
+    def picture_normalized_url(self):
+        return self.picture_editable.url if self.picture_editable is not None else self.picture
+
+    @property
+    def given_name_normalized(self):
+        return self.given_name_editable if self.given_name_editable is not None else \
+            (self.given_name if self.given_name is not None else self.name)
+
+    @property
+    def family_name_normalized(self):
+        return self.family_name_editable if self.family_name_editable is not None else \
+            (self.family_name if self.family_name is not None else None)
+
+    @property
+    def name_normalized(self):
+        if self.given_name_editable is not None and self.family_name_editable is not None:
+            return '{} {}'.format(self.given_name_editable, self.family_name_editable)
+        elif self.given_name_editable is not None:
+            return self.given_name_editable
+        elif self.family_name_editable is not None:
+            return self.family_name_editable
+        else:
+            return self.name
 
     @property
     def is_github_user(self):
