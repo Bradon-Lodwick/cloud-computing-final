@@ -26,6 +26,11 @@
             {% else %}
             <li><a href="{{ url_for('home') }}">Home</a></li>
             {% endif %}
+            {% if request.path == url_for('search') %}
+            <li class="active"><a href="{{ url_for('search') }}">Search</a></li>
+            {% else %}
+            <li><a href="{{ url_for('search') }}">Search</a></li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
 
