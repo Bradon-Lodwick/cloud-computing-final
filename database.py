@@ -168,6 +168,41 @@ class User(me.DynamicDocument):
         else:
             return None
 
+    @staticmethod
+    def search(name=None, school_name=None, work_position=None, description=None, skills=None, limit=50, offset=0):
+        """ Used for default search queries. Any argument that is given as None will be ignored.
+
+        Args:
+            name (str): The name of the user to search for.
+            school_name (str): The name of the school to search for.
+            work_position (str): The name of the previous work position to search for.
+            description (str): The phrase to look for in the description.
+            skills (list): The list of skills to search for.
+            limit (int): The number of users to return.
+            offset (int): The number of users to skip.
+
+        Returns:
+            list: The list of users that fit the criteria.
+        """
+
+        # Build the search criteria to pass into the user search
+        search = dict()
+        if name is not None:
+            search['name__iexact'] = name
+        if school_name is not None:
+            search['education__name__iexact'] = school_name
+        if work_position is not None:
+            search['work_history__position__iexact'] = work_position
+        if description is not None:
+            search['description__icontains'] = description
+        if skills is not None:
+            # Loop through all the skills and add them to the search
+            for skill in skills:
+                search['skills'] = skill
+
+        # Perform the search
+        return User.objects(**search)[offset:limit].all()
+
     def add_repo(self, url):
         """Adds a repo to the user's portfolio items.
 
