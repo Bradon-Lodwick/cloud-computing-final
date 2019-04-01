@@ -24,32 +24,32 @@
                 </script>
             </div>
 
-            <div class="col-md-9 edit-profile-row">
+            <div class="col-md-9 col-sm-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Profile Overview:</label>
                 <div class="col-lg-8">
                     <textarea name="description" onkeyup="textCounter(this,'desc_chars_left',150);" id="description" class="form-control" rows="3" cols="30" maxlength="150">{{ user.description if user.description is not none }}</textarea>
                     <p id="desc_chars_left"></p>
                 </div>
             </div>
-            <div class="col-md-9 edit-profile-row">
+            <div class="col-md-9 col-sm-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Given Name:</label>
                 <div class="col-lg-8">
                     <input name="given_name_editable" id="given_name" class="form-control" type="text" value="{{ user.given_name_normalized }}">
                 </div>
             </div>
-            <div class="col-md-9 edit-profile-row">
+            <div class="col-md-9 col-sm-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Family Name:</label>
                 <div class="col-lg-8">
                     <input name="family_name_editable" id="family_name" class="form-control" type="text" value="{{ user.family_name_normalized }}">
                 </div>
             </div>
-            <div class="col-md-9 edit-profile-row">
-                <label class="col-lg-3 control-label">Skills:</label>
-                <button type="button" onclick="add_skill_handler()" id="add_skills_button" class="btn btn-primary">Add</button>
-                <div class="autocomplete col-lg-8">
+            <div class="col-md-9 col-sm-9 edit-profile-row">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label">Skills:</label>
+                <div class="autocomplete col-lg-8 col-sm-8 col-md-8">
                     <input style="float: right;" id="skills_text_input" class="form-control" type="text" placeholder="Skill">
                     <br>
                 </div>
+                <button type="button" onclick="add_skill_handler()" id="add_skills_button" class="btn btn-primary col-sm-1 col-md-1 col-lg-1">Add</button>
                 {% for skill in user.skills %}
                 <button id="{{ skill }}skills_added" class="displayed_skills col-sm-3" type="button" onclick="remove_skill(this)">
                     <div class="displayed_skills_text">{{ skill }}<input type="hidden" name="skills[]" value="{{ skill }}">
@@ -57,12 +57,14 @@
                 </button>
                 {% endfor %}
             </div>
-            <div class="col-md-9 edit-profile-row">
+            <br>
+            <div class="col-md-3 col-sm-3"></div>
+            <div class="col-md-9 col-sm-9 edit-profile-row">
                 <label class="col-lg-1 control-label">Awards:</label>
-                <button type="button" onclick="add_award_handler()" id="add_award_button" style="float: left; col-lg-1" class="btn btn-primary">Add</button>
+                <button type="button" onclick="add_award_handler()" id="add_award_button" style="col-lg-1" class="btn btn-primary">Add</button>
             </div>
             <br>
-            <div class="col-md-3"></div>
+            <div class="col-md-3 col-sm-3"></div>
             <div class="col-md-9 edit-profile-row">
                 <input type="submit" value="Submit" class="btn btn-primary btn-large">
             </div>
