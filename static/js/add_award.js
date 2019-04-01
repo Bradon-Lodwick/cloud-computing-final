@@ -12,7 +12,6 @@ function add_award(entity, index, associated_with) {
     var delete_button = document.createElement("button");
     delete_button.setAttribute("id", "award_delete_" + index);
     delete_button.setAttribute("class", "btn btn-danger");
-    delete_button.setAttribute("style", "float: left;")
     delete_button.setAttribute("type", "button");
     delete_button.innerHTML = "Delete Award"
     delete_button.addEventListener("click", function(e) {

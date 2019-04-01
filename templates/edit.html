@@ -64,7 +64,7 @@
                 <button type="button" onclick="add_award_handler()" id="add_award_button" style="col-lg-1" class="btn btn-primary">Add</button>
                 {% for award in user.awards %}
                     <div id="award_{{loop.index}}" class="col-md-12" style="border-style: dashed; margin-top: 15px; padding: 15px;">
-                        <button id="award_delete_{{loop.index}}" class="btn btn-danger" style="float: left;" type="button">Delete Award</button>
+                        <button id="award_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete Award</button>
                         <script>
                             document.getElementById("award_delete_{{loop.index}}").addEventListener("click", function(e) {
                                 remove_award(document.getElementById("award_{{loop.index}}"))
