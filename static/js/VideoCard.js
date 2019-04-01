@@ -45,12 +45,13 @@ class VideoCard extends React.Component {
 			haslink = true;
 		}
 
-		if (this.state.width > 900) {
+		if (this.state.width > 900  && this.props.browser == "desktop") {
 			cardType = "-" + this.props.orientation;
 		}
 		else {
 			cardType = "-compact"
 		}
+
 		return (
 			<div className={"videoCardDiv" + cardType}>
 				<div className={"videoCardGrid" + cardType}>

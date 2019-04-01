@@ -166,9 +166,11 @@ def dashboard():
 @app.route('/testpage')
 def test():
     """A page for testing"""
-    episodes = [{'name': 'e1',
-                 'url': 'https://www.podtrac.com/pts/redirect.mp3/dovetail.prxu.org/126/62a2fe8b-c77c- \
-                 4b16-b33e-1af2bd32bdd5/Start_With_This_Idea_to_Execution_WTNV_Intro.mp3'}]
+    if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
+        browser = 'mobile'
+    else:
+        browser = 'desktop'
+
     projects = [
         {
             'title': "Project 1",
@@ -196,9 +198,14 @@ def test():
                             bloop bloop bloop bloop bloop bloop \
                             bloop bloop bloop bloop bloop bloop ",
             'url': "https://www.youtube.com/watch?v=W9CLdkkNn20"
+        },
+        {
+            'title': "Project 4",
+            'desc': "A short description",
+            'url': "https://www.youtube.com/watch?v=W9CLdkkNn20"
         }
     ]
-    return render_template('testpage.html', episodes=episodes, projects=projects)
+    return render_template('testpage.html', browser=browser, projects=projects)
 
 
 # Run the app if this is the main file
