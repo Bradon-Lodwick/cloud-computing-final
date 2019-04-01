@@ -58,11 +58,30 @@ def get_current_user():
     return db.User.objects(user_id=session['profile']['user_id'])[0]
 
 
+def get_skilled_users(skills):
+    """Retrieves a list of users with the selected skills"""
+    return db.User.objects(skills__all=skills)
+
+
 @app.route('/')
 def home():
     """The home page for the app."""
 
     return render_template('home.html')
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+
+    if request.method == 'POST':
+        if 'skills' in request.values:
+            skills = request.values.getlist('skills')
+            print(skills)
+            users = get_skilled_users(skills)
+            print(users)
+
+    return render_template('search.html', skills=constants.skills)
+
 
 
 @app.route('/login')

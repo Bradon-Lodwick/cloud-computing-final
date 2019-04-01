@@ -8,5 +8,18 @@ Home
 <div class="jumbotron text-center">
     <h1>Student Profile Viewer</h1>
     <p>Create your profile and get noticed by employers today!</p>
+
+    <br />
+
+    <div class="text-center mt-4">
+        <a class="btn-x1 btn-outline-light" href="{{ url_for('login') }}">
+            Create Profile
+        </a>
+        |
+        <a class="btn-x1 btn-outline-light" href="{{ url_for('search') }}">
+            Search Profiles
+        </a>
+    </div>
+
 </div>
 {% endblock %}

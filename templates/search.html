@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1>Student Profile Viewer</h1>
+    <p>Create your profile and get noticed by employers today!</p>
+
+    <br />
+
+    <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
+        <p>Find users with these skills:</p>
+        <div  style="column-count: 3">
+            {% for skill in skills %}
+                <input type="checkbox" name="skills" value="{{ skill }}"> {{ skill }}<br />
+            {% endfor %}
+        </div>
+        <br />
+        <input type="submit" value="Submit">
+    </form>
+
+</div>
+{% endblock %}
