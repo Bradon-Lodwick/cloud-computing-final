@@ -22,6 +22,7 @@ function add_award(entity, index) {
 
     award_master_div.appendChild(delete_button);
 
+    /*
     var picture_column_div = document.createElement("div");
     picture_column_div.setAttribute("class", "column col-md-4 text-center")
     picture_column_div.setAttribute("style", "float: center; overflow:hidden;")
@@ -53,17 +54,22 @@ function add_award(entity, index) {
     })
     input_image.setAttribute("class", "form-control");
     picture_column_div.appendChild(input_image);
+    */
 
     var text_column_div = document.createElement("div");
-    text_column_div.setAttribute("class", "edit-profile-row column col-md-4")
+    text_column_div.setAttribute("class", "edit-profile-row column col-lg-9 col-md-9 col-sm-9")
     award_master_div.appendChild(text_column_div);
 
-    text_column_div.innerHTML = "<label class='column control-label'>Award Name:</label>"
-    text_column_div.innerHTML += "<input name='award_name[]' id='award_" + index + "_name_input class='form-control column' type='text' placeholder='Award Name' />"
-    text_column_div.innerHTML += "<label class='column control-label' style='margin-top: 10px' >Award Description:</label>"
+    text_column_div.innerHTML += "<label class='col-lg-3 control-label'>Award Name:</label>"
+    text_column_div.innerHTML += "<div class='col-lg-8'> " +
+        "<input name='award_name[]' id='award_" + index + "_name_input class='form-control' type='text' placeholder='Award Name' />" +
+        "</div>";
+    text_column_div.innerHTML += "<label class='col-lg-3 control-label' style='margin-top: 10px' >Award Description:</label>"
     var key_up_string = 'textCounter(this,"award_' + index + '_desc_chars_left", 120);'
-    text_column_div.innerHTML += "<textarea name='award_description[]' onkeyup='" + key_up_string + "' id='award_" + index + "_desc_input class='form-control column' type='text' rows='3' cols='30' placeholder='Award Description'></textarea>"
-    text_column_div.innerHTML += "<p id='award_" + index + "_desc_chars_left'></p>"
+    text_column_div.innerHTML += "<div class='col-lg-8' style='margin-top: 10px;'>" +
+    "<textarea name='award_description[]' onkeyup='" + key_up_string + "' id='award_" + index + "_desc_input class='form-control column' type='text' rows='3' cols='30' placeholder='Award Description'></textarea>" +
+    "<p id='award_" + index + "_desc_chars_left'></p>" +
+    "</div>";
 }
 
 

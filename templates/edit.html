@@ -70,6 +70,7 @@
                                 remove_award(document.getElementById("award_{{loop.index}}"))
                             });
                         </script>
+                        <!--
                         <div class="column col-md-4 text-center" style="float: center; overflow:hidden;">
                             <div id="awards_image_{{loop.index}}" class="crop_award" style="background-image: url('award.image')"></div>
                             <input name="awards_image{{award.image}}" type="file" id="award_{{loop.index}}_image" accept="image/*"/>
@@ -87,14 +88,19 @@
                                     }
                                 })
                             </script>
-                        </div>
+                        </div> -->
                         <div class="edit-profile-row column col-md-4">
-                            <label class='column control-label'>Award Name:</label>
-                            <input name='award_name[]' id='award_{{loop.index}}_name_input' class='form-control column' type='text' value='{{award.name}}' />
-                            <textarea name='award_description[]' onkeyup="textCounter(this, 'award_{{loop.index}}_desc_chars_left', 120);" id='award_{{loop.index}}_desc_input' class='form-control column' rows='3' cols='30' placeholder='Award Description'>
-                                "{{ award.description }}"
-                            </textarea>
-                            <p id='award_{{loop.index}}_desc_chars_left'></p>
+                            <label class='col-lg-3 column control-label'>Award Name:</label>
+                            <div class='col-lg-8'>
+                                <input name='award_name[]' id='award_{{loop.index}}_name_input' class='form-control column' type='text' value='{{award.name}}' />
+                            </div>
+                            <label class='col-lg-3 control-label' style='margin-top: 10px'>Award Description:</label>
+                            <div class='col-lg-8' style='margin-top: 10px;'>
+                                <textarea name='award_description[]' onkeyup="textCounter(this, 'award_{{loop.index}}_desc_chars_left', 120);" id='award_{{loop.index}}_desc_input' class='form-control column' rows='3' cols='30' placeholder='Award Description'>
+                                    "{{ award.description }}"
+                                </textarea>
+                                <p id='award_{{loop.index}}_desc_chars_left'></p>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
