@@ -62,7 +62,7 @@
             <div class="col-md-9 col-sm-9 edit-profile-row">
                 <label class="col-lg-1 control-label">Awards:</label>
                 <button type="button" onclick="add_award_handler()" id="add_award_button" style="col-lg-1" class="btn btn-primary">Add</button>
-                {% for award in user.Awards %}
+                {% for award in user.awards %}
                     <div id="award_{{loop.index}}">
                         <button id="award_delete_{{loop.index}}" class="btn btn-danger" style="float: left;" type="button">Delete Award</button>
                         <script>
@@ -101,6 +101,26 @@
                                 </textarea>
                                 <p id='award_{{loop.index}}_desc_chars_left'></p>
                             </div>
+                            <label class='col-lg-3 control-label' style='margin-top: 10px' >Award Reference:</label>
+                            <div class='col-lg-8'>
+                                <select name='award_association[]' id='award_{{loop.index}}_association_input' class='form-control column'>
+                                    {% for ref in associated_with %}
+                                        {% if ref == award.associated_with %}
+                                            <option value='{{ref}}' selected>"{{ref}}"</option>
+                                        {% else %}
+                                            <option value='{{ref}}'>"{{ref}}"</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class='col-lg-3 control-label' style='margin-top: 10px' >Date Received:</label>
+                            <div class='col-lg-8'>
+                                <input name='award_date[]' id='award_{{loop.index}}_date_input' value="{{award.date}}" class='form-control' type='date'/>
+                            </div>
+                            <label class='col-lg-3 control-label' style='margin-top: 10px'>Award Issuer:</label>
+                            <div class='col-lg-8'>
+                                <input name='award_issuer[]' id='award_{{ loop.index }}_issuer_input' class='form-control' value="{{award.issuer}}" type='text' placeholder='Award Issuer' />
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -120,7 +140,8 @@
 <script src="{{ url_for('static', filename='js/add_award.js') }}"></script>
 <script>
     var skills = {{ skills | tojson }};
-    var awards =  {{ user.Awards }}
+    var awards =  {{ user.awards }};
+    var associated_with = {{ associated_with | tojson }};
     autocomplete(document.getElementById("skills_text_input"), skills);
 
     if( awards != null ){
@@ -131,7 +152,7 @@
 
     function add_award_handler(){
         num_awards += 1;
-        add_award(document.getElementById("add_award_button"), num_awards);
+        add_award(document.getElementById("add_award_button"), num_awards, associated_with);
     }
 
     function add_skill_handler(){

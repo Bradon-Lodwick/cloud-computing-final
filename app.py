@@ -138,7 +138,7 @@ def edit_dashboard():
         user = get_current_user()
         if request.method == 'GET':
             # Pass the user to the edit page to be displayed
-            return render_template('edit.html', skills=constants.skills, user=user)
+            return render_template('edit.html', skills=constants.skills, user=user, associated_with=constants.associated_with)
         elif request.method == 'POST':
 
             # Check for a profile picture

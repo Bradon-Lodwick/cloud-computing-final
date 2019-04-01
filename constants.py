@@ -20,3 +20,10 @@ skills = [
     'Confident',
     'Self Motivated',
 ]
+
+associated_with = [
+    'School',
+    'Word',
+    'Volunteer',
+    'Other',
+]
