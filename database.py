@@ -23,9 +23,6 @@ MONGODB_DB = os.environ.get('MONGODB_DB')
 conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
-possible_skills = ['programming', 'graphic design', 'full-stack development', 'leader', 'communication']
-
-
 class PortfolioItem(me.EmbeddedDocument):
     _id = me.ObjectIdField()
     item_type = me.StringField(choices=['repo', 'image', 'pdf', 'file', 'youtube', None])
