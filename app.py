@@ -140,6 +140,7 @@ def edit_dashboard():
             # Pass the user to the edit page to be displayed
             return render_template('edit.html', skills=constants.skills, user=user)
         elif request.method == 'POST':
+
             # Check for a profile picture
             picture = request.files.get('picture')
             if picture.content_type.startswith('image/'):
@@ -153,14 +154,57 @@ def edit_dashboard():
                 # Delete old pic from cloudinary
                 if old_profile_pic is not None:
                     old_profile_pic.delete()
+
             # Check for skill updates
             skills = request.form.getlist('skills[]')
             # Replace all skills in the database
             user.skills = skills
+
+            # Get the award information from the form
+            award_names = request.form.getlist('award_name[]')
+            award_descriptions = request.form.getlist('award_description[]')
+            award_dates = request.form.getlist('award_date[]')
+            award_issuers = request.form.getlist('award_issuer[]')
+            award_associated_with = request.form.getlist('award_associated_with[]')
+            # Create the awards
+            awards = list()
+            """ TODO This will be implemented when the form has all values
+            for name, description, date, issuer, associated_with \
+                    in zip(award_names, award_descriptions, award_dates, award_issuers, award_associated_with):
+                # Create the award
+                award = db.Award(
+                    name=name, description=description, date=date, issuer=issuer, associated_with=associated_with)
+                awards.append(award)
+            """
+            for name, description \
+                    in zip(award_names, award_descriptions):
+                # Create the award
+                award = db.Award(
+                    name=name, description=description)
+                awards.append(award)
+            # Set the awards
+            user.awards = awards
+
+            # Get the work information from the form
+            work_names = request.form.getlist('work_name[]')
+            work_urls = request.form.getlist('work_url[]')
+            work_position = request.form.getlist('work_position[]')
+            work_start_dates = request.form.getlist('work_start_date[]')
+            work_end_dates = request.form.getlist('work_end_date[]')
+            # Create the work history list
+            work_history = list()
+            for name, url, position, start_date, end_date in zip(work_names, work_urls, work_position, work_start_dates, work_end_dates):
+                # Create the previous work position
+                work = db.Work(name=name, url=url, position=position, start_date=start_date, end_date=end_date)
+                work_history.append(work)
+            # Set the previous work
+            user.work_history = work_history
+
             # Get the text information from the form
             data = request.form
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
+
             user.save()
             # Update the session info
             session['profile'] = {
