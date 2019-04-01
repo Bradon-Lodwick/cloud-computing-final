@@ -83,6 +83,7 @@ class User(me.DynamicDocument):
 
     # Personalized information for the student profile to use
     # TODO place all the duplicate info from auth0 here, so it is not overwritten
+    profile_picture = me.EmbeddedDocumentField(File)
 
     # Identities are used to tell which service the user signed up with
     identities = me.EmbeddedDocumentListField(Identity)
@@ -91,7 +92,6 @@ class User(me.DynamicDocument):
     url = me.URLField()  # API URL
     html_url = me.URLField()  # PROFILE URL
     repos_url = me.URLField()
-    meta = {'collection': 'users'}
 
     # Generic information for portfolio
     description = me.StringField()
@@ -109,6 +109,8 @@ class User(me.DynamicDocument):
 
     # Portfolio holds a list of portfolio items for their page
     portfolio = me.EmbeddedDocumentListField(PortfolioItem)
+
+    meta = {'collection': 'users'}
 
     def __repr__(self):
         """Default representation for the user object."""
@@ -159,7 +161,23 @@ class User(me.DynamicDocument):
             raise exc.IdentityError(self.user_id, 'github')
 
 
-class UserSchema(ma.ModelSchema):
-    """Marshmallow schema for the User class."""
+class UserUpdateSchema(ma.ModelSchema):
+    """Marshmallow schema for updating the User class."""
     class Meta:
         model = User
+        model_fields_kwargs = {
+            'name': {'dump_only': True},
+            'picture': {'dump_only': True},
+            'user_id': {'dump_only': True},
+            'email': {'dump_only': True},
+            'email_verified': {'dump_only': True},
+            'given_name': {'dump_only': True},
+            'family_name': {'dump_only': True},
+            'identities': {'dump_only': True},
+            'url': {'dump_only': True},
+            'html_url': {'dump_only': True},
+            'repos_url': {'dump_only': True},
+        }
+
+
+user_update_schema = UserUpdateSchema()

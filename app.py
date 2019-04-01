@@ -10,14 +10,15 @@ import logging
 import os
 import sys
 from authlib.flask.client import OAuth
+from datetime import datetime
 from flask import Flask, session, redirect, render_template, url_for, request
 from six.moves.urllib.parse import urlencode
 
 import database as db
+import constants
+from api_connections.cloudinary import File
 from security import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET
 from security.authorization import requires_auth
-
-import constants
 
 # The callback url for Auth0
 CALLBACK_URL = os.environ.get('AUTH0_CALLBACK_URL')
@@ -111,14 +112,35 @@ def edit_dashboard():
     if not session['logged_in']:
         return redirect(url_for('home'))
     else:
+        # Get the user's information from the database
+        user = get_current_user()
         if request.method == 'GET':
-            # Get the user's information from the database
-            user = get_current_user()
             # Pass the user to the edit page to be displayed
             return render_template('edit.html', skills=constants.skills, user=user)
         elif request.method == 'POST':
-            # Get the information from the post
-            pass
+            # Check for a profile picture
+            picture = request.files.get('picture')
+            if picture.content_type.startswith('image/'):
+                # Upload to cloudinary
+                key = 'users/{}/profile-picture-{}'.format(user.user_id, datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                new_profile_pic = File(picture, key)
+                # Get old image info from database
+                old_profile_pic = user.profile_picture
+                # Update new image in database
+                user.profile_picture = new_profile_pic
+                # Delete old pic from cloudinary
+                if old_profile_pic is not None:
+                    old_profile_pic.delete()
+            # Check for skill updates
+            skills = request.form.getlist('skills')
+            if len(skills) > 0:
+                # TODO replace all skills in the database
+                pass
+            # Get the text information from the form
+            data = request.form
+            # Pass the data into the user object to update
+            user, errors = db.user_update_schema.update(user, data)
+            user.save()
             return redirect(url_for('dashboard'))
 
 

@@ -17,7 +17,7 @@ class File(me.EmbeddedDocument):
     url = me.URLField(required=True)
     key = me.StringField(required=True)
 
-    def __init__(self, file, public_key, **kwargs):
+    def __init__(self, file=None, public_key=None, **kwargs):
         """Creates a new file, uploading it to cloudinary.
 
         Args:
@@ -25,16 +25,16 @@ class File(me.EmbeddedDocument):
             public_key: The key to have the file referenced by.
         """
 
-        # Upload the file
-        upload(file, public_id=public_key)
-        # Get the new location
-        url = cloudinary_url(public_key)[0]
-        super().__init__(public_key=public_key, url=url, **kwargs)
+        if file is not None and public_key is not None:
+            # Upload the file
+            upload(file, public_id=public_key)
+            # Get the new location
+            url = cloudinary_url(public_key)[0]
+            super(File, self).__init__(key=public_key, url=url, **kwargs)
+        else:
+            super(File, self).__init__(**kwargs)
 
-    def delete(self, **kwargs):
-        """Deletes the file from cloudinary as well as from mongoengine."""
+    def delete(self):
+        """Deletes the file from cloudinary."""
         # Delete the object from cloudinary
         destroy(self.key)
-
-        # Deletes the object from cloudinary
-        super().delete(**kwargs)
