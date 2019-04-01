@@ -33,8 +33,12 @@
             <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             {% else %}
+            {% if request.path == url_for('dashboard') %}
+            <li class="active"><a href="{{ url_for('dashboard') }}"><img src="{{ session.profile.picture }}" class="profile-picture"/> {{ session['profile']['name'] }}</a></li>
+            {% else %}
             <li><a href="{{ url_for('dashboard') }}"><img src="{{ session.profile.picture }}" class="profile-picture"/> {{ session['profile']['name'] }}</a></li>
-            <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('logout') }}" class="logout-text">Log Out</a></li>
             {% endif %}
         </ul>
   </div>

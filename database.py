@@ -23,9 +23,6 @@ MONGODB_DB = os.environ.get('MONGODB_DB')
 conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
-possible_skills = ['programming', 'graphic design', 'full-stack development', 'leader', 'communication']
-
-
 class PortfolioItem(me.EmbeddedDocument):
     _id = me.ObjectIdField()
     item_type = me.StringField(choices=['repo', 'image', 'pdf', 'file', 'youtube', None])
@@ -82,7 +79,6 @@ class User(me.DynamicDocument):
     family_name = me.StringField()
 
     # Personalized information for the student profile to use
-    # TODO place all the duplicate info from auth0 here, so it is not overwritten
     picture_editable = me.EmbeddedDocumentField(File)
     given_name_editable = me.StringField()
     family_name_editable = me.StringField()

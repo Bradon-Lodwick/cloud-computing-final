@@ -110,13 +110,16 @@ def callback_handling():
     resp = auth0.get('userinfo')
     userinfo = resp.json()
 
+    # Get the user from the mongodb database
+    user = db.User.objects.get(user_id=userinfo['sub'])
+
     # Store the user information in flask session.
     session['logged_in'] = True
     session['jwt_payload'] = userinfo
     session['profile'] = {
-        'user_id': userinfo['sub'],
-        'name': userinfo['name'],
-        'picture': userinfo['picture']
+        'user_id': user.user_id,
+        'name': user.name_normalized,
+        'picture': user.picture_normalized_url
     }
 
     # Redirect to the user's dashboard
@@ -144,22 +147,27 @@ def edit_dashboard():
                 key = 'users/{}/profile-picture-{}'.format(user.user_id, datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
                 new_profile_pic = File(picture, key)
                 # Get old image info from database
-                old_profile_pic = user.profile_picture
+                old_profile_pic = user.picture_editable
                 # Update new image in database
-                user.profile_picture = new_profile_pic
+                user.picture_editable = new_profile_pic
                 # Delete old pic from cloudinary
                 if old_profile_pic is not None:
                     old_profile_pic.delete()
             # Check for skill updates
-            skills = request.form.getlist('skills')
-            if len(skills) > 0:
-                # TODO replace all skills in the database
-                pass
+            skills = request.form.getlist('skills[]')
+            # Replace all skills in the database
+            user.skills = skills
             # Get the text information from the form
             data = request.form
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
             user.save()
+            # Update the session info
+            session['profile'] = {
+                'user_id': user.user_id,
+                'name': user.name_normalized,
+                'picture': user.picture_normalized_url
+            }
             return redirect(url_for('dashboard'))
 
 
@@ -177,9 +185,11 @@ def dashboard():
 @app.route('/testpage')
 def test():
     """A page for testing"""
-    episodes = [{'name': 'e1',
-                 'url': 'https://www.podtrac.com/pts/redirect.mp3/dovetail.prxu.org/126/62a2fe8b-c77c- \
-                 4b16-b33e-1af2bd32bdd5/Start_With_This_Idea_to_Execution_WTNV_Intro.mp3'}]
+    if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
+        browser = 'mobile'
+    else:
+        browser = 'desktop'
+
     projects = [
         {
             'title': "Project 1",
@@ -207,9 +217,14 @@ def test():
                             bloop bloop bloop bloop bloop bloop \
                             bloop bloop bloop bloop bloop bloop ",
             'url': "https://www.youtube.com/watch?v=W9CLdkkNn20"
+        },
+        {
+            'title': "Project 4",
+            'desc': "A short description",
+            'url': "https://www.youtube.com/watch?v=W9CLdkkNn20"
         }
     ]
-    return render_template('testpage.html', episodes=episodes, projects=projects)
+    return render_template('testpage.html', browser=browser, projects=projects)
 
 
 # Run the app if this is the main file

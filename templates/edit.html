@@ -25,12 +25,6 @@
             </div>
 
             <div class="col-md-9 edit-profile-row">
-                <label class="col-lg-3 control-label">Email:</label>
-                <div class="col-lg-8">
-                    <input name="email" id="email" class="form-control" type="email" value="{{ user.email if user.email is not none }}">
-                </div>
-            </div>
-            <div class="col-md-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Profile Overview:</label>
                 <div class="col-lg-8">
                     <textarea name="description" onkeyup="textCounter(this,'desc_chars_left',150);" id="description" class="form-control" rows="3" cols="30" maxlength="150">{{ user.description if user.description is not none }}</textarea>
@@ -40,13 +34,13 @@
             <div class="col-md-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Given Name:</label>
                 <div class="col-lg-8">
-                    <input name="given_name" id="given_name" class="form-control" type="text" value="{{ user.given_name if user.given_name is not none }}">
+                    <input name="given_name_editable" id="given_name" class="form-control" type="text" value="{{ user.given_name_normalized }}">
                 </div>
             </div>
             <div class="col-md-9 edit-profile-row">
                 <label class="col-lg-3 control-label">Family Name:</label>
                 <div class="col-lg-8">
-                    <input name="family_name" id="family_name" class="form-control" type="text" value="{{ user.family_name if user.family_name is not none }}">
+                    <input name="family_name_editable" id="family_name" class="form-control" type="text" value="{{ user.family_name_normalized }}">
                 </div>
             </div>
             <div class="col-md-9 edit-profile-row">
@@ -56,8 +50,19 @@
                     <input style="float: right;" id="skills_text_input" class="form-control" type="text" placeholder="Skill">
                     <br>
                 </div>
+                {% for skill in user.skills %}
+                <button id="{{ skill }}skills_added" class="displayed_skills col-sm-3" type="button" onclick="remove_skill(this)">
+                    <div class="displayed_skills_text">{{ skill }}<input type="hidden" name="skills[]" value="{{ skill }}">
+                    </div>
+                </button>
+                {% endfor %}
             </div>
-                <input type="submit" value="Submit">
+            <div class="col-md-9 edit-profile-row">
+                <label class="col-lg-3 control-label">Awards:</label>
+                <button type="button" onclick="add_award_handler()" id="add_award_button" class="btn btn-primary">Add</button>
+            </div>
+            <br>
+            <input type="submit" value="Submit" class="btn btn-primary btn-large">
         </form>
     </div>
 </div>
@@ -65,9 +70,16 @@
 <script src="{{ url_for('static', filename='js/text_counter.js') }}"></script>
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add_skill.js') }}"></script>
+<script src="{{ url_for('static', filename='js/add_award.js') }}"></script>
 <script>
     var skills = {{ skills | tojson }};
     autocomplete(document.getElementById("skills_text_input"), skills);
+
+    var num_awards = 0;
+    function add_award_handler(){
+        num_awards += 1;
+        add_award(document.getElementById("add_award_button"), num_awards);
+    }
 
     function add_skill_handler(){
         add_skill(document.getElementById("skills_text_input"), skills);
