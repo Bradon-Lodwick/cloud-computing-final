@@ -50,7 +50,7 @@ class Award(me.EmbeddedDocument):
     description = me.StringField()
     date = me.DateField()
     issuer = me.StringField()
-    associated_with = me.StringField(choices=['School', 'Word', 'Volunteer', 'Other'])
+    associated_with = me.StringField(choices=const.associated_with)
 
 
 class Work(me.EmbeddedDocument):

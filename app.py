@@ -165,22 +165,14 @@ def edit_dashboard():
             award_descriptions = request.form.getlist('award_description[]')
             award_dates = request.form.getlist('award_date[]')
             award_issuers = request.form.getlist('award_issuer[]')
-            award_associated_with = request.form.getlist('award_associated_with[]')
+            award_associated_with = request.form.getlist('award_association[]')
             # Create the awards
             awards = list()
-            """ TODO This will be implemented when the form has all values
             for name, description, date, issuer, associated_with \
                     in zip(award_names, award_descriptions, award_dates, award_issuers, award_associated_with):
                 # Create the award
                 award = db.Award(
                     name=name, description=description, date=date, issuer=issuer, associated_with=associated_with)
-                awards.append(award)
-            """
-            for name, description \
-                    in zip(award_names, award_descriptions):
-                # Create the award
-                award = db.Award(
-                    name=name, description=description)
                 awards.append(award)
             # Set the awards
             user.awards = awards

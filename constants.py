@@ -23,7 +23,7 @@ skills = [
 
 associated_with = [
     'School',
-    'Word',
+    'Work',
     'Volunteer',
     'Other',
 ]
