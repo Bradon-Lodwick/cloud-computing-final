@@ -25,7 +25,7 @@ function add_award(entity, index, associated_with) {
     text_column_div.setAttribute("class", "edit-profile-row column col-md-12")
     award_master_div.appendChild(text_column_div);
 
-    text_column_div.innerHTML += "<label class='col control-label'>Award Name:</label>"
+    text_column_div.innerHTML += "<label class='col control-label'>Award Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
         "<input name='award_name[]' id='award_" + index + "_name_input' class='form-control column' type='text' placeholder='Award Name' />" +
         "</div>";

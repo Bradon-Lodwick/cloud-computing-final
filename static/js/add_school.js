@@ -25,17 +25,17 @@ function add_school(entity, index) {
     text_column_div.setAttribute("class", "edit-profile-row column col-md-12")
     school_master_div.appendChild(text_column_div);
 
-    text_column_div.innerHTML += "<label class='col control-label'>School Name:</label>"
+    text_column_div.innerHTML += "<label class='col control-label'>School Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
         "<input name='school_name[]' id='school_" + index + "_name_input' class='form-control column' type='text' placeholder='School...' />" +
         "</div>";
 
-    text_column_div.innerHTML += "<label class='col control-label'>Degree:</label>"
+    text_column_div.innerHTML += "<label class='col control-label'>Degree (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
         "<input name='school_degree[]' id='school_" + index + "_degree_input' class='form-control column' type='text' placeholder='Degree...' />" +
         "</div>";
 
-    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date:</label>" +
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>" +
     "<div class='col'> " +
         "<input name='school_start_date[]' id='school_" + index + "_start_date_input' class='form-control' type='date'/>" +
     "</div>";

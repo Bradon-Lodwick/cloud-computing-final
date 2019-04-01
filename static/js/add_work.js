@@ -25,7 +25,7 @@ function add_work(entity, index) {
     text_column_div.setAttribute("class", "edit-profile-row column col-md-12")
     work_master_div.appendChild(text_column_div);
 
-    text_column_div.innerHTML += "<label class='col control-label'>Company Name:</label>"
+    text_column_div.innerHTML += "<label class='col control-label'>Company Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
         "<input name='work_name[]' id='work_" + index + "_name_input' class='form-control column' type='text' placeholder='Company Name' />" +
         "</div>";
@@ -48,7 +48,7 @@ function add_work(entity, index) {
         tmp_str += "<option value='" + associated_with[i] + "'>" + associated_with[i] + "</option>";
     }
 
-    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date:</label>" +
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>" +
     "<div class='col'> " +
         "<input name='job_start_date[]' id='job_" + index + "_start_date_input' class='form-control' type='date'/>" +
     "</div>";
