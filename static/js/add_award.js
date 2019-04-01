@@ -22,53 +22,19 @@ function add_award(entity, index, associated_with) {
 
     award_master_div.appendChild(delete_button);
 
-    /*
-    var picture_column_div = document.createElement("div");
-    picture_column_div.setAttribute("class", "column col-md-4 text-center")
-    picture_column_div.setAttribute("style", "float: center; overflow:hidden;")
-    award_master_div.appendChild(picture_column_div);
-
-    var image_crop = document.createElement("div");
-    image_crop.setAttribute("id", "awards_image_" + index)
-    image_crop.setAttribute("class", "crop_award")
-    image_crop.setAttribute("style", "background-image: url('https://cdn.pixabay.com/photo/2017/07/24/05/20/cup-2533629_960_720.png')");
-    picture_column_div.appendChild(image_crop)
-
-    var input_image = document.createElement("input");
-    input_image.setAttribute("name", "award_image[]");
-    input_image.setAttribute("type", "file");
-    input_image.setAttribute("id", "award_" + index + "_image");
-    input_image.setAttribute("accept", "image/*");
-    input_image.addEventListener("change", function(e){
-        var output = document.getElementById("awards_image_" + index);
-        var input = document.getElementById("award_" + index + "_image");
-        var file = input.files[0];
-        var reader = new FileReader();
-        reader.onload = imageIsLoaded;
-        reader.readAsDataURL(input.files[0]);
-
-        function imageIsLoaded(e) {
-          output.style.backgroundImage ='url(' + e.target.result + ')';
-        }
-
-    })
-    input_image.setAttribute("class", "form-control");
-    picture_column_div.appendChild(input_image);
-    */
-
     var text_column_div = document.createElement("div");
-    text_column_div.setAttribute("class", "edit-profile-row column col-lg-9 col-md-9 col-sm-9")
+    text_column_div.setAttribute("class", "edit-profile-row column col-md-12")
     award_master_div.appendChild(text_column_div);
 
-    text_column_div.innerHTML += "<label class='col-lg-3 control-label'>Award Name:</label>"
-    text_column_div.innerHTML += "<div class='col-lg-8'> " +
-        "<input name='award_name[]' id='award_" + index + "_name_input class='form-control' type='text' placeholder='Award Name' />" +
+    text_column_div.innerHTML += "<label class='col control-label'>Award Name:</label>"
+    text_column_div.innerHTML += "<div class='col'> " +
+        "<input name='award_name[]' id='award_" + index + "_name_input' class='form-control column' type='text' placeholder='Award Name' />" +
         "</div>";
 
-    text_column_div.innerHTML += "<label class='col-lg-3 control-label' style='margin-top: 10px' >Award Description:</label>"
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Award Description:</label>"
     var key_up_string = 'textCounter(this,"award_' + index + '_desc_chars_left", 120);'
-    text_column_div.innerHTML += "<div class='col-lg-8''>" +
-    "<textarea name='award_description[]' onkeyup='" + key_up_string + "' id='award_" + index + "_desc_input class='form-control column' type='text' rows='3' cols='30' placeholder='Award Description'></textarea>" +
+    text_column_div.innerHTML += "<div class='col control-label''>" +
+    "<textarea name='award_description[]' onkeyup='" + key_up_string + "' id='award_" + index + "_desc_input' class='form-control column' type='text' rows='3' cols='30' placeholder='Award Description'></textarea>" +
     "<p id='award_" + index + "_desc_chars_left'></p>" +
     "</div>";
 
@@ -77,21 +43,21 @@ function add_award(entity, index, associated_with) {
     for (i=0;i < associated_with.length; i++){
         tmp_str += "<option value='" + associated_with[i] + "'>" + associated_with[i] + "</option>";
     }
-    text_column_div.innerHTML += "<label class='col-lg-3 control-label' style='margin-top: 10px' >Award Reference:</label>"
-    text_column_div.innerHTML += "<div class='col-lg-8'>" +
-    "<select name='award_association[]' id='award_" + index + "_association_input class='form-control column'>" +
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Award Reference:</label>"
+    text_column_div.innerHTML += "<div class='col'>" +
+    "<select name='award_association[]' id='award_" + index + "_association_input' class='form-control column'>" +
     tmp_str +
     "</select>" +
     "</div>";
 
-    text_column_div.innerHTML += "<label class='col-lg-3 control-label' style='margin-top: 10px' >Date Received:</label>" +
-    "<div class='col-lg-8'> " +
-        "<input name='award_date[]' id='award_" + index + "_date_input class='form-control' type='date'/>" +
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Date Received:</label>" +
+    "<div class='col'> " +
+        "<input name='award_date[]' id='award_" + index + "_date_input' class='form-control' type='date'/>" +
     "</div>";
 
-    text_column_div.innerHTML += "<label class='col-lg-3 control-label' style='margin-top: 10px'>Award Issuer:</label>"
-    text_column_div.innerHTML += "<div class='col-lg-8'> " +
-    "<input name='award_issuer[]' id='award_" + index + "_issuer_input class='form-control' type='text' placeholder='Award Issuer' />" +
+    text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px'>Award Issuer:</label>"
+    text_column_div.innerHTML += "<div class='col'> " +
+    "<input name='award_issuer[]' id='award_" + index + "_issuer_input' class='form-control' type='text' placeholder='Award Issuer' />" +
     "</div>";
 }
 
