@@ -63,32 +63,13 @@
                 <label class="col-lg-1 control-label">Awards:</label>
                 <button type="button" onclick="add_award_handler()" id="add_award_button" style="col-lg-1" class="btn btn-primary">Add</button>
                 {% for award in user.awards %}
-                    <div id="award_{{loop.index}}">
+                    <div id="award_{{loop.index}}" class="col-md-12" style="border-style: dashed; margin-top: 15px; padding: 15px;">
                         <button id="award_delete_{{loop.index}}" class="btn btn-danger" style="float: left;" type="button">Delete Award</button>
                         <script>
                             document.getElementById("award_delete_{{loop.index}}").addEventListener("click", function(e) {
                                 remove_award(document.getElementById("award_{{loop.index}}"))
                             });
                         </script>
-                        <!--
-                        <div class="column col-md-4 text-center" style="float: center; overflow:hidden;">
-                            <div id="awards_image_{{loop.index}}" class="crop_award" style="background-image: url('award.image')"></div>
-                            <input name="awards_image{{award.image}}" type="file" id="award_{{loop.index}}_image" accept="image/*"/>
-                            <script>
-                                document.getElementById("award_{{loop.index}}_image").addEventListener("change", function(e){
-                                    var output = document.getElementById("awards_image_{{loop.index}}");
-                                    var input = document.getElementById("award_{{loop.index}}_image");
-                                    var file = input.files[0];
-                                    var reader = new FileReader();
-                                    reader.onload = imageIsLoaded;
-                                    reader.readAsDataURL(input.files[0]);
-
-                                    function imageIsLoaded(e) {
-                                      output.style.backgroundImage ='url(' + e.target.result + ')';
-                                    }
-                                })
-                            </script>
-                        </div> -->
                         <div class="edit-profile-row column col-md-4">
                             <label class='col-lg-3 column control-label'>Award Name:</label>
                             <div class='col-lg-8'>
@@ -96,9 +77,7 @@
                             </div>
                             <label class='col-lg-3 control-label' style='margin-top: 10px'>Award Description:</label>
                             <div class='col-lg-8' style='margin-top: 10px;'>
-                                <textarea name='award_description[]' onkeyup="textCounter(this, 'award_{{loop.index}}_desc_chars_left', 120);" id='award_{{loop.index}}_desc_input' class='form-control column' rows='3' cols='30' placeholder='Award Description'>
-                                    "{{ award.description }}"
-                                </textarea>
+                                <textarea name='award_description[]' onkeyup="textCounter(this, 'award_{{loop.index}}_desc_chars_left', 120);" id='award_{{loop.index}}_desc_input' class='form-control column' rows='3' cols='30' placeholder='Award Description'>{{ award.description }}</textarea>
                                 <p id='award_{{loop.index}}_desc_chars_left'></p>
                             </div>
                             <label class='col-lg-3 control-label' style='margin-top: 10px' >Award Reference:</label>
@@ -106,9 +85,9 @@
                                 <select name='award_association[]' id='award_{{loop.index}}_association_input' class='form-control column'>
                                     {% for ref in associated_with %}
                                         {% if ref == award.associated_with %}
-                                            <option value='{{ref}}' selected>"{{ref}}"</option>
+                                            <option value='{{ref}}' selected>{{ref}}</option>
                                         {% else %}
-                                            <option value='{{ref}}'>"{{ref}}"</option>
+                                            <option value='{{ref}}'>{{ref}}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
@@ -140,7 +119,7 @@
 <script src="{{ url_for('static', filename='js/add_award.js') }}"></script>
 <script>
     var skills = {{ skills | tojson }};
-    var awards =  {{ user.awards }};
+    var awards =  {{ user.awards | length }};
     var associated_with = {{ associated_with | tojson }};
     autocomplete(document.getElementById("skills_text_input"), skills);
 
