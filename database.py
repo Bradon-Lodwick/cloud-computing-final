@@ -182,7 +182,7 @@ class User(me.DynamicDocument):
             offset (int): The number of users to skip.
 
         Returns:
-            list: The list of users that fit the criteria.
+            list: The list of users that fit the criteria and the number of possible users in the format (users, count).
         """
 
         # Build the search criteria to pass into the user search
@@ -197,11 +197,11 @@ class User(me.DynamicDocument):
             search['description__icontains'] = description
         if skills is not None:
             # Loop through all the skills and add them to the search
-            for skill in skills:
-                search['skills'] = skill
+            search['skills__all'] = skills
 
         # Perform the search
-        return User.objects(**search)[offset:limit].all()
+        users = User.objects(**search).all()
+        return users[offset:limit], users.count()
 
     def add_repo(self, url):
         """Adds a repo to the user's portfolio items.
