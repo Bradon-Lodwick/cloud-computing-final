@@ -1,4 +1,4 @@
-function add_skill(entry, arr){
+function add_skill(entry, arr) {
   var a, b, i, val = this.value;
   entry_val = entry.value
   if (arr.includes(entry_val) && !entry.parentNode.parentNode.contains(document.getElementById(entry_val + "skills_added"))){

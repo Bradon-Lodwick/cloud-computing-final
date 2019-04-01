@@ -82,3 +82,14 @@
 .displayed_skills_text {
     color: white;
 }
+
+.crop_award {
+  text-align: center;
+  border-radius: 75px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: auto 150px;
+  height: 150px;
+  width: 150px;
+  overflow: hidden;
+}
