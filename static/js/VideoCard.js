@@ -4,37 +4,22 @@ class VideoCard extends React.Component {
 	constructor (props){
 		super(props)
 		this.state = {
-			count: 1,
-			word: "state",
 			width: 0,
 			height: 0,
 		}
 	}
 
-	checkWindowWidth(){
-		this.setState({
-			word: window.innerWidth
-		});
-	}
-
 	componentDidMount(){
-		this.setState({word: "component mounted"});
-		this.timerID = setInterval(
-		  () => this.checkWindowWidth(),
-		  1000
-		);
 		this.updateWindowDimensions();
 		window.addEventListener('resize', this.updateWindowDimensions.bind(this));
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updateWindowDimensions.bind(this));
-		clearInterval(this.timerID);
 	}
 
 	updateWindowDimensions() {
-	  this.setState({ width: window.innerWidth, height: window.innerHeight});
-	  this.setState({count: this.state.count + 1})
+	  this.setState({ width: window.outerWidth, height: window.innerHeight});
 	}
 
 	render(){
@@ -45,7 +30,7 @@ class VideoCard extends React.Component {
 			haslink = true;
 		}
 
-		if (this.state.width > 900  && this.props.browser == "desktop") {
+		if (this.state.width > 900) {
 			cardType = "-" + this.props.orientation;
 		}
 		else {
