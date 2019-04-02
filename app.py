@@ -81,14 +81,20 @@ def search():
         description = request.values.get('description')
 
         # Get the limit and offset information from the form
-        limit = request.values.get('limit')
-        offset = request.values.get('offset')
+        try:
+            limit = int(request.values.get('limit'))
+        except ValueError:
+            limit = 50
+        try:
+            offset = int(request.values.get('offset'))
+        except ValueError:
+            offset = 0
 
         # Get the users from the search
-        users = db.User.search(name=name, school_name=school_name, work_position=work_position,
+        users, count = db.User.search(name=name, school_name=school_name, work_position=work_position,
                                 description=description, skills=skills, limit=limit, offset=offset)
-
-        print(users)
+        # Create the new offset
+        new_offset = offset + count
 
     return render_template('search.html', skills=constants.skills)
 
