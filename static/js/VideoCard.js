@@ -41,7 +41,7 @@ class VideoCard extends React.Component {
 		var cardType;
 		var haslink = false;
 
-		if (this.props.extraInfo != null){
+		if (this.props.extraInfo != ""){
 			haslink = true;
 		}
 
