@@ -30,7 +30,7 @@ class VideoCard extends React.Component {
 			haslink = true;
 		}
 
-		if (this.state.width > 900  && this.props.browser == "desktop") {
+		if (this.state.width > 900) {
 			cardType = "-" + this.props.orientation;
 		}
 		else {
