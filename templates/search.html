@@ -19,6 +19,23 @@ Search
             {% endfor %}
         </div>
         <br />
+        <p>Find users with these attributes:</p>
+        <div  style="column-count: 3">
+            <div>
+                Name: <input type="text" name="name">
+            </div>
+            <div>
+                School: <input type="text" name="school_name">
+            </div>
+            <div>
+                Work Position: <input type="text" name="work_position">
+            </div>
+            <div>
+                Description: <input type="text" name="description">
+            </div>
+        </div>
+        <input type="hidden" name="limit" value="{{ limit }}">
+        <input type="hidden" name="offset" value="{{ offset }}">
         <input type="submit" value="Submit">
     </form>
 

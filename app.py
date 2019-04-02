@@ -85,8 +85,10 @@ def search():
         offset = request.values.get('offset')
 
         # Get the users from the search
-        users = db.Users.search(name=name, school_name=school_name, work_position=work_position,
+        users = db.User.search(name=name, school_name=school_name, work_position=work_position,
                                 description=description, skills=skills, limit=limit, offset=offset)
+
+        print(users)
 
     return render_template('search.html', skills=constants.skills)
 
