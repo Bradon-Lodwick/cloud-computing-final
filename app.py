@@ -58,11 +58,6 @@ def get_current_user():
     return db.User.objects(user_id=session['profile']['user_id'])[0]
 
 
-def get_skilled_users(skills):
-    """Retrieves a list of users with the selected skills"""
-    return db.User.objects(skills__all=skills)
-
-
 @app.route('/')
 def home():
     """The home page for the app."""
@@ -74,14 +69,26 @@ def home():
 def search():
 
     if request.method == 'POST':
-        if 'skills' in request.values:
-            skills = request.values.getlist('skills')
-            print(skills)
-            users = get_skilled_users(skills)
-            print(users)
+        # Get the selected skills
+        if 'skills[]' in request.values:
+            skills = request.values.getlist('skills[]')
+        else:
+            skills = None
+        # Get the plaintext information from the form
+        name = request.values.get('name')
+        school_name = request.values.get('school_name')
+        work_position = request.values.get('work_position')
+        description = request.values.get('description')
+
+        # Get the limit and offset information from the form
+        limit = request.values.get('limit')
+        offset = request.values.get('offset')
+
+        # Get the users from the search
+        users = db.Users.search(name=name, school_name=school_name, work_position=work_position,
+                                description=description, skills=skills, limit=limit, offset=offset)
 
     return render_template('search.html', skills=constants.skills)
-
 
 
 @app.route('/login')

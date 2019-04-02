@@ -15,7 +15,7 @@ Search
         <p>Find users with these skills:</p>
         <div  style="column-count: 3">
             {% for skill in skills %}
-                <input type="checkbox" name="skills" value="{{ skill }}"> {{ skill }}<br />
+                <input type="checkbox" name="skills[]" value="{{ skill }}"> {{ skill }}<br />
             {% endfor %}
         </div>
         <br />

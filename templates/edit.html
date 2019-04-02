@@ -71,7 +71,7 @@
                             });
                         </script>
                         <div class="edit-profile-row column col-md-12">
-                            <label class='col column control-label'>Award Name:</label>
+                            <label class='col column control-label'>Award Name (Required):</label>
                             <div class='col'>
                                 <input name='award_name[]' id='award_{{loop.index}}_name_input' class='form-control column' type='text' value='{{award.name}}' />
                             </div>
@@ -104,6 +104,86 @@
                     </div>
                 {% endfor %}
             </div>
+            <div class="col-md-3 col-sm-3"></div>
+            <div class="col-md-9 col-sm-9 edit-profile-row">
+                <label class="col control-label">Work History:</label>
+                <button type="button" onclick="add_work_handler()" id="add_work_button" style="col-lg-1" class="btn btn-primary">Add</button>
+                {% for work in user.work_history %}
+                    <div id="work_{{loop.index}}" class="col-md-12" style="border-style: dashed; margin-top: 15px; padding: 15px;">
+                        <button id="work_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete Job</button>
+                        <script>
+                            document.getElementById("work_delete_{{loop.index}}").addEventListener("click", function(e) {
+                                remove_work(document.getElementById("work_{{loop.index}}"))
+                            });
+                        </script>
+                        <div class="edit-profile-row column col-md-12">
+                            <!-- Company Name -->
+                            <label class='col column control-label'>Company Name (Required):</label>
+                            <div class='col'>
+                                <input name='work_name[]' id='work_{{loop.index}}_name_input' class='form-control column' type='text' value='{{work.name}}' />
+                            </div>
+                            <!-- Position Title -->
+                            <label class='col column control-label'>Position Title:</label>
+                            <div class='col'>
+                                <input name='work_position[]' id='work_{{loop.index}}_position_input' class='form-control column' type='text' value='{{work.position}}' />
+                            </div>
+                            <!-- Position Description -->
+                            <label class='col control-label' style='margin-top: 10px'>Job Description:</label>
+                            <div class='col' style='margin-top: 10px;'>
+                                <textarea name='work_description[]' onkeyup="textCounter(this, 'work_{{loop.index}}_desc_chars_left', 120);" id='work_{{loop.index}}_desc_input' class='form-control column' rows='3' cols='30' placeholder='Job Description'>{{ work.description }}</textarea>
+                                <p id='work_{{loop.index}}_desc_chars_left'></p>
+                            </div>
+                            <!-- Start Date -->
+                            <label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>
+                            <div class='col'>
+                                <input name='job_start_date[]' id='job_{{loop.index}}_start_date_input' value="{{work.start_date}}" class='form-control column' type='date'/>
+                            </div>
+                            <!-- End Date -->
+                           <label class='col control-label' style='margin-top: 10px' >End Date:</label>
+                            <div class='col'>
+                                <input name='job_end_date[]' id='job_{{loop.index}}_end_date_input' value="{{work.end_date}}" class='form-control column' type='date'/>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-3 col-sm-3"></div>
+            <div class="col-md-9 col-sm-9 edit-profile-row">
+                <label class="col control-label">Education History:</label>
+                <button type="button" onclick="add_school_handler()" id="add_school_button" style="col-lg-1" class="btn btn-primary">Add</button>
+                {% for school in user.education %}
+                    <div id="school_{{loop.index}}" class="col-md-12" style="border-style: dashed; margin-top: 15px; padding: 15px;">
+                        <button id="school_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete</button>
+                        <script>
+                            document.getElementById("school_delete_{{loop.index}}").addEventListener("click", function(e) {
+                                remove_school(document.getElementById("school_{{loop.index}}"))
+                            });
+                        </script>
+                        <div class="edit-profile-row column col-md-12">
+                            <!-- School Name -->
+                            <label class='col column control-label'>School Name (Required):</label>
+                            <div class='col'>
+                                <input name='school_name[]' id='school_{{loop.index}}_name_input' class='form-control column' type='text' value='{{school.name}}' />
+                            </div>
+                            <!-- Degree -->
+                            <label class='col column control-label'>Degree (Required):</label>
+                            <div class='col'>
+                                <input name='school_degree[]' id='school_{{loop.index}}_degree_input' class='form-control column' type='text' value='{{school.degree}}' />
+                            </div>
+                            <!-- Start Date -->
+                            <label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>
+                            <div class='col'>
+                                <input name='school_start_date[]' id='school_{{loop.index}}_start_date_input' value="{{school.start_date}}" class='form-control column' type='date'/>
+                            </div>
+                            <!-- End Date -->
+                           <label class='col control-label' style='margin-top: 10px' >End Date (Or Estimated End Date):</label>
+                            <div class='col'>
+                                <input name='school_end_date[]' id='school_{{loop.index}}_end_date_input' value="{{school.end_date}}" class='form-control column' type='date'/>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
             <br>
             <div class="col-md-3 col-sm-3"></div>
             <div class="col-md-9 edit-profile-row">
@@ -117,9 +197,13 @@
 <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add_skill.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add_award.js') }}"></script>
+<script src="{{ url_for('static', filename='js/add_work.js') }}"></script>
+<script src="{{ url_for('static', filename='js/add_school.js') }}"></script>
 <script>
     var skills = {{ skills | tojson }};
     var num_awards =  {{ user.awards | length }};
+    var num_work = {{ user.work_history | length}}
+    var num_schools = {{ user.education | length}}
     var associated_with = {{ associated_with | tojson }};
     autocomplete(document.getElementById("skills_text_input"), skills);
 
@@ -130,6 +214,14 @@
 
     function add_skill_handler(){
         add_skill(document.getElementById("skills_text_input"), skills);
+    }
+
+    function add_work_handler(){
+        add_work(document.getElementById("add_work_button"), num_work)
+    }
+
+    function add_school_handler(){
+        add_school(document.getElementById("add_school_button"), num_schools)
     }
 </script>
 
