@@ -149,12 +149,12 @@ def callback_handling():
     userinfo = resp.json()
 
     # Get the user from the mongodb database
-    # user = db.User.objects.get(user_id=userinfo['sub'])
+    user = db.User.objects.get(user_id=userinfo['sub'])
 
     # Store the user information in flask session.
     session['logged_in'] = True
     session['jwt_payload'] = userinfo
-    """
+
     session['profile'] = {
         'user_id': user.user_id,
         'name': user.name_normalized,
@@ -166,6 +166,7 @@ def callback_handling():
         'name': 'Bradon Lodwick',
         'picture': 'https://avatars0.githubusercontent.com/u/25203495?v=4'
     }
+    """
 
     # Redirect to the user's dashboard
     return redirect(url_for('dashboard'))

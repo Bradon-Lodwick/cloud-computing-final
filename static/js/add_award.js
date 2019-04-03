@@ -27,7 +27,7 @@ function add_award(entity, index, associated_with) {
 
     text_column_div.innerHTML += "<label class='col control-label'>Award Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
-        "<input name='award_name[]' id='award_" + index + "_name_input' class='form-control column' type='text' placeholder='Award Name' />" +
+        "<input onkeyup='validate_all()' name='award_name[]' id='award_" + index + "_name_input' class='form-control column' type='text' placeholder='Award Name' />" +
         "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Award Description:</label>"
@@ -58,11 +58,16 @@ function add_award(entity, index, associated_with) {
     text_column_div.innerHTML += "<div class='col'> " +
     "<input name='award_issuer[]' id='award_" + index + "_issuer_input' class='form-control' type='text' placeholder='Award Issuer' />" +
     "</div>";
+
+    add_validation(document.getElementById("award_" + index + "_name_input"));
+    validate_all()
 }
 
 
 
 function remove_award(entity){
     console.log("removing skill...")
+    remove_validation(entity.id + "_name_input");
+    validate_all()
     entity.parentNode.removeChild(entity);
 }
