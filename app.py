@@ -68,6 +68,8 @@ def home():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
 
+    new_offset = 0
+
     if request.method == 'POST':
         # Get the selected skills
         if 'skills[]' in request.values:
@@ -89,14 +91,24 @@ def search():
             offset = int(request.values.get('offset'))
         except ValueError:
             offset = 0
-
+        print(offset)
         # Get the users from the search
         users, count = db.User.search(name=name, school_name=school_name, work_position=work_position,
                                 description=description, skills=skills, limit=limit, offset=offset)
-        # Create the new offset
-        new_offset = offset + count
 
-    return render_template('search.html', skills=constants.skills)
+        print(users)
+
+        # Create the new offset
+        new_offset = offset + len(users)
+        print(new_offset)
+        # Send back the search results page
+        return render_template('results.html', name=name, school_name=school_name, work_position=work_position,
+                               description=description, skills=skills, limit=limit, offset=new_offset,
+                               old_offset=offset, results=users)
+
+    else:
+        # Send back the search page
+        return render_template('search.html', skills=constants.skills, limit=2, offset=0)
 
 
 @app.route('/login')
