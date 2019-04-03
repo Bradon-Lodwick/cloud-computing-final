@@ -181,12 +181,12 @@
                             <!-- School Name -->
                             <label class='col column control-label'>School Name (Required):</label>
                             <div class='col'>
-                                <input name='school_name[]' id='school_{{loop.index}}_name_input' class='form-control column' type='text' value='{{school.name}}' />
+                                <input onkeyup='validate_all()' name='school_name[]' id='school_{{loop.index}}_name_input' class='form-control column' type='text' value='{{school.name}}' />
                             </div>
                             <!-- Degree -->
                             <label class='col column control-label'>Degree (Required):</label>
                             <div class='col'>
-                                <input name='school_degree[]' id='school_{{loop.index}}_degree_input' class='form-control column' type='text' value='{{school.degree}}' />
+                                <input onkeyup='validate_all()' name='school_degree[]' id='school_{{loop.index}}_degree_input' class='form-control column' type='text' value='{{school.degree}}' />
                             </div>
                             <!-- Start Date -->
                             <label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>
@@ -196,7 +196,7 @@
                             <!-- End Date -->
                            <label class='col control-label' style='margin-top: 10px' >End Date (Or Estimated End Date):</label>
                             <div class='col'>
-                                <input name='school_end_date[]' id='school_{{loop.index}}_end_date_input' value="{{school.end_date}}" class='form-control column' type='date'/>
+                                <input onkeyup='validate_all()' name='school_end_date[]' id='school_{{loop.index}}_end_date_input' value="{{school.end_date}}" class='form-control column' type='date'/>
                             </div>
                         </div>
                     </div>
@@ -240,10 +240,12 @@
     }
 
     function add_work_handler(){
+        num_work += 1;
         add_work(document.getElementById("add_work_button"), num_work)
     }
 
     function add_school_handler(){
+        num_schools += 1;
         add_school(document.getElementById("add_school_button"), num_schools)
     }
 </script>
