@@ -52,6 +52,15 @@ auth0 = oauth.register(
 )
 
 
+def get_browser_type(user_agent_string):
+    if any(phone in user_agent_string.lower() for phone in ['android', 'iphone', 'blackberry']):
+        browser = 'mobile'
+    else:
+        browser = 'desktop'
+
+    return browser
+
+
 def get_current_user():
     """Retrieves the current session's user from the database."""
 
@@ -89,22 +98,28 @@ def search():
             limit = 50
         try:
             offset = int(request.values.get('offset'))
+            if offset < 0:
+                offset = 0
         except ValueError:
             offset = 0
         print(offset)
         # Get the users from the search
         users, count = db.User.search(name=name, school_name=school_name, work_position=work_position,
-                                description=description, skills=skills, limit=limit, offset=offset)
+                                      description=description, skills=skills, limit=limit, offset=offset)
 
         print(users)
 
         # Create the new offset
         new_offset = offset + len(users)
         print(new_offset)
+
+        # Get the current browser type from the user agent string
+        browser = get_browser_type(request.headers.get('User-Agent'))
+
         # Send back the search results page
         return render_template('results.html', name=name, school_name=school_name, work_position=work_position,
                                description=description, skills=skills, limit=limit, offset=new_offset,
-                               old_offset=offset, results=users)
+                               old_offset=offset, results=users, browser=browser)
 
     else:
         # Send back the search page
@@ -255,10 +270,13 @@ def dashboard():
 @app.route('/testpage')
 def test():
     """A page for testing"""
-    if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
-        browser = 'mobile'
-    else:
-        browser = 'desktop'
+
+    #if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
+    #    browser = 'mobile'
+    #else:
+    #    browser = 'desktop'
+
+    browser = get_browser_type(request.headers.get('User-Agent'))
 
     projects = [
         {

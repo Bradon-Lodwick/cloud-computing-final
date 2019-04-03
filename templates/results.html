@@ -8,6 +8,7 @@ Search
 <div class="jumbotron text-center">
     <h1>Student Profile Viewer</h1>
     <div>
+        <!-- Page navigation links -->
         <a href="{{ url_for('search') }}" style="display: inline-block; float: left">New Search</a>
         <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
             {% for skill in skills %}
@@ -18,10 +19,11 @@ Search
             <input type="hidden" name="work_position" value="{{ work_position }}" />
             <input type="hidden" name="description" value="{{ description }}" />
             <input type="hidden" name="limit" value="{{ limit }}" />
-            <input type="hidden" name="offset" value="{{ old_offset }}" />
+            <input type="hidden" name="offset" value="{{ old_offset - limit }}" />
 
             <input type="submit" value="Prev Page" style="display: inline-block; float: left" />
         </form>
+        <div style="display: inline">Page: {{ ((old_offset/limit) + 1)|int }}</div>
         <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
             {% for skill in skills %}
                 <input type="hidden" name="skills[]" value="{{ skill }}" />
@@ -38,14 +40,57 @@ Search
     </div>
     <br />
 
-    <!-- The search results -->
-    <div>
-        {% for result in results %}
-            {{ result }}<br />
-        {% endfor %}
-    </div>
-
+    <!-- The search results (populated by React.js) -->
+    <div id="card_container"></div>
 
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profilecard.css') }}">
+
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script src="{{ url_for('static', filename='js/ProfileCard.js') }}" type="text/babel"></script>
+<script type="text/babel">
+    const Results = () => {
+				return (
+					<div>
+						{% for user in results %}
+
+							{% if  loop.index % 2 == 0 %}
+								<ProfileCard
+									key="{{ loop.index }}"
+									name="{{ user.name }}"
+									photo="{{ user.picture }}"
+									url="{{ url_for('home') }}"
+									description="LMTH.STLUSER MORF NOITPIRCSED ELPMAS"
+									orientation="right"
+									browser="{{ browser }}"
+								/>
+							{% else %}
+							    <ProfileCard
+									key="{{ loop.index }}"
+									name="{{ user.name }}"
+									photo="{{ user.picture }}"
+									url="{{ url_for('home') }}"
+									description="SAMPLE DESCRIPTION FROM RESULTS.HTML"
+									orientation="left"
+									browser="{{ browser }}"
+								/>
+							{% endif %}
+
+						{% endfor %}
+					</div>
+				)
+
+			}
+
+			ReactDOM.render(
+				<Results />,
+				document.getElementById('card_container')
+			);
+</script>
 {% endblock %}
