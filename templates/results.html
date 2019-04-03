@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1>Student Profile Viewer</h1>
+    <div>
+        <a href="{{ url_for('search') }}" style="display: inline-block; float: left">New Search</a>
+        <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
+            {% for skill in skills %}
+                <input type="hidden" name="skills[]" value="{{ skill }}" />
+            {% endfor %}
+            <input type="hidden" name="name" value="{{ name }}" />
+            <input type="hidden" name="school_name" value="{{ school_name }}" />
+            <input type="hidden" name="work_position" value="{{ work_position }}" />
+            <input type="hidden" name="description" value="{{ description }}" />
+            <input type="hidden" name="limit" value="{{ limit }}" />
+            <input type="hidden" name="offset" value="{{ old_offset }}" />
+
+            <input type="submit" value="Prev Page" style="display: inline-block; float: left" />
+        </form>
+        <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
+            {% for skill in skills %}
+                <input type="hidden" name="skills[]" value="{{ skill }}" />
+            {% endfor %}
+            <input type="hidden" name="name" value="{{ name }}" />
+            <input type="hidden" name="school_name" value="{{ school_name }}" />
+            <input type="hidden" name="work_position" value="{{ work_position }}" />
+            <input type="hidden" name="description" value="{{ description }}" />
+            <input type="hidden" name="limit" value="{{ limit }}" />
+            <input type="hidden" name="offset" value="{{ offset }}" />
+
+            <input type="submit" value="Next Page" style="display: inline-block; float: left" />
+        </form>
+    </div>
+    <br />
+
+    <!-- The search results -->
+    <div>
+        {% for result in results %}
+            {{ result }}<br />
+        {% endfor %}
+    </div>
+
+
+
+</div>
+{% endblock %}
