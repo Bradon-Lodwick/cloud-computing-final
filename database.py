@@ -25,7 +25,7 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 class PortfolioItem(me.EmbeddedDocument):
     _id = me.ObjectIdField()
-    item_type = me.StringField(choices=['repo', 'image', 'pdf', 'file', 'youtube', None])
+    item_type = me.StringField(choices=[])
     title = me.StringField()
     description = me.StringField()
 

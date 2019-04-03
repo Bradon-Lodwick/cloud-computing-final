@@ -126,15 +126,22 @@ def callback_handling():
     userinfo = resp.json()
 
     # Get the user from the mongodb database
-    user = db.User.objects.get(user_id=userinfo['sub'])
+    # user = db.User.objects.get(user_id=userinfo['sub'])
 
     # Store the user information in flask session.
     session['logged_in'] = True
     session['jwt_payload'] = userinfo
+    """
     session['profile'] = {
         'user_id': user.user_id,
         'name': user.name_normalized,
         'picture': user.picture_normalized_url
+    }
+    """
+    session['profile'] = {
+        'user_id': 'ce4d1f80038b349341fbc839cc3d9318',
+        'name': 'Bradon Lodwick',
+        'picture': 'https://avatars0.githubusercontent.com/u/25203495?v=4'
     }
 
     # Redirect to the user's dashboard
@@ -276,6 +283,13 @@ def test():
         }
     ]
     return render_template('testpage.html', browser=browser, projects=projects)
+
+
+@app.route('/portfolio/new-project')
+@requires_auth
+def add_portfolio_item():
+
+    return render_template('create_item.html', item_types=constants.item_types, user={'github_id': 25203495})
 
 
 # Run the app if this is the main file
