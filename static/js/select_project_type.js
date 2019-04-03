@@ -70,8 +70,12 @@ $(function() {
         if (typeof repo.contributions === 'undefined') {
             $('#other-repo-help').text('Please only link repositories you have contributed to.');
             $('#other-repo-help').show();
+            throw new Error('Repo invalid');
         }
         else {
+            // Set the repo api url
+            $('#repo-api-url').val(endpoint);
+            $('#repo-api-url').prop("disabled", false);
             return repo;
         }
 
@@ -89,19 +93,10 @@ $(function() {
 
         /* Display the repo data on the page */
         $('#repo-title').val(repo.name);
-        $('#repo-title').prop("disabled", false);
-
         $('#repo-description').val(repo.description);
-        $('#repo-description').prop("disabled", false);
-
         $('#repo-language-display').text(repo.language);
-        $('#repo-language-display').prop("disabled", false);
-
         $('#repo-issues-display').text(repo.open_issues_count);
-        $('#repo-issues-display').prop("disabled", false);
-
         $('#repo-forks-display').text(repo.forks_count);
-        $('#repo-forks-display').prop("disabled", false);
 
         $('#repo-output-div').show();
     });

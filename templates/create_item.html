@@ -6,7 +6,7 @@ Create Portfolio Item
 
 {% block content %}
 <div class="container">
-    <form>
+    <form action="{{ url_for('add_portfolio_item') }}" method="POST">
         <div class="form-group col-md-12">
             <h1>Create New Project</h1>
         </div>
@@ -98,6 +98,10 @@ Create Portfolio Item
                     <textarea id="repo-description" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-label" rows="10" readonly disabled></textarea>
                 </div>
             </div>
+            <input type="text" name="repo-api-url" id="repo-api-url" hidden disabled>
+        </div>
+        <div class="form-group col-md-12" id="submit-group">
+            <button class="btn btn-primary" type="submit">Create Project</button>
         </div>
     </form>
 </div>

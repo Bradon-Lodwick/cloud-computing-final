@@ -160,13 +160,6 @@ def callback_handling():
         'name': user.name_normalized,
         'picture': user.picture_normalized_url
     }
-    """
-    session['profile'] = {
-        'user_id': 'ce4d1f80038b349341fbc839cc3d9318',
-        'name': 'Bradon Lodwick',
-        'picture': 'https://avatars0.githubusercontent.com/u/25203495?v=4'
-    }
-    """
 
     # Redirect to the user's dashboard
     return redirect(url_for('dashboard'))
@@ -225,18 +218,31 @@ def edit_dashboard():
 
             # Get the work information from the form
             work_names = request.form.getlist('work_name[]')
-            work_urls = request.form.getlist('work_url[]')
             work_position = request.form.getlist('work_position[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
             # Create the work history list
             work_history = list()
-            for name, url, position, start_date, end_date in zip(work_names, work_urls, work_position, work_start_dates, work_end_dates):
+            for name, position, start_date, end_date in zip(work_names, work_position, work_start_dates, work_end_dates):
                 # Create the previous work position
-                work = db.Work(name=name, url=url, position=position, start_date=start_date, end_date=end_date)
+                work = db.Work(name=name, position=position, start_date=start_date, end_date=end_date)
                 work_history.append(work)
             # Set the previous work
             user.work_history = work_history
+
+            # Get the school information from the form
+            school_names = request.form.getlist('school_name[]')
+            school_degrees = request.form.getlist('school_degree[]')
+            school_start_dates = request.form.getlist('school_start_date[]')
+            school_end_dates = request.form.getlist('school_end_date[]')
+            # Create the education history list
+            education_history = list()
+            for name, degree, start_date, end_date in zip(school_names, school_degrees, school_start_dates, school_end_dates):
+                # Create the school
+                school = db.School(name=name, degree=degree, start_date=start_date, end_date=end_date)
+                education_history.append(school)
+            # Set the education field
+            user.education = education_history
 
             # Get the text information from the form
             data = request.form
@@ -312,11 +318,11 @@ def test():
     return render_template('testpage.html', browser=browser, projects=projects)
 
 
-@app.route('/portfolio/new-project')
+@app.route('/portfolio/new-project', methods=['GET', 'POST'])
 @requires_auth
 def add_portfolio_item():
-
-    return render_template('create_item.html', item_types=constants.item_types, user={'github_id': 25203495})
+    user = get_current_user()
+    return render_template('create_item.html', item_types=constants.item_types, user=user)
 
 
 # Run the app if this is the main file
