@@ -76,15 +76,13 @@ def home():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-
-    new_offset = 0
-
     if request.method == 'POST':
         # Get the selected skills
         if 'skills[]' in request.values:
             skills = request.values.getlist('skills[]')
         else:
-            skills = None
+            skills = []
+
         # Get the plaintext information from the form
         name = request.values.get('name')
         school_name = request.values.get('school_name')
@@ -98,20 +96,18 @@ def search():
             limit = 50
         try:
             offset = int(request.values.get('offset'))
+            # Force into bounds
             if offset < 0:
                 offset = 0
         except ValueError:
             offset = 0
-        print(offset)
+
         # Get the users from the search
         users, count = db.User.search(name=name, school_name=school_name, work_position=work_position,
                                       description=description, skills=skills, limit=limit, offset=offset)
 
-        print(users)
-
-        # Create the new offset
+        # Calculate the new offset
         new_offset = offset + len(users)
-        print(new_offset)
 
         # Get the current browser type from the user agent string
         browser = get_browser_type(request.headers.get('User-Agent'))
@@ -119,11 +115,11 @@ def search():
         # Send back the search results page
         return render_template('results.html', name=name, school_name=school_name, work_position=work_position,
                                description=description, skills=skills, limit=limit, offset=new_offset,
-                               old_offset=offset, results=users, browser=browser)
+                               old_offset=offset, results=users, browser=browser, count=count)
 
     else:
         # Send back the search page
-        return render_template('search.html', skills=constants.skills, limit=2, offset=0)
+        return render_template('search.html', skills=constants.skills, limit=20, offset=0)
 
 
 @app.route('/login')

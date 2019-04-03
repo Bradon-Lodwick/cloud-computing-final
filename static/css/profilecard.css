@@ -2,6 +2,7 @@
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 32px;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -9,13 +10,15 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 450px;
+	/*width: 500px;*/
+	flex-basis: 45%;
 }
 
 .profileCardDiv-left {
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 32px;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -23,7 +26,8 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 450px;
+	/*width: 500px;*/
+	flex-basis: 45%;
 }
 
 
@@ -31,6 +35,7 @@
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 32px;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -38,12 +43,14 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 450px;
+	/*width: 400px;*/
+	flex-basis: 75%
 }
 
 .profileCardGrid-right {
+	background-color: #ffffff;
 	display: grid;
-	grid-template-columns: auto 450px;
+	grid-template-columns: auto 200px;
 	grid-template-rows: auto auto auto;
 	grid-template-areas:
 	'header pic'
@@ -53,8 +60,9 @@
 }
 
 .profileCardGrid-left {
+	background-color: #ffffff;
 	display: grid;
-	grid-template-columns: 450px auto;
+	grid-template-columns: 200px auto;
 	grid-template-rows: auto auto auto;
 	grid-template-areas:
 	'pic header'
@@ -64,6 +72,7 @@
 }
 
 .profileCardGrid-compact {
+	background-color: #ffffff;
 	display: grid;
 	grid-template-areas:
 	'header'

@@ -5,11 +5,10 @@ Search
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron text-center">
-    <h1>Student Profile Viewer</h1>
-    <div>
-        <!-- Page navigation links -->
-        <a href="{{ url_for('search') }}" style="display: inline-block; float: left">New Search</a>
+<div class="jumbotron text-center" >
+
+    <div style="display: flex; flex-direction: row; justify-content: center">
+        {% if ((old_offset/limit))|int != 0 %}
         <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
             {% for skill in skills %}
                 <input type="hidden" name="skills[]" value="{{ skill }}" />
@@ -23,7 +22,11 @@ Search
 
             <input type="submit" value="Prev Page" style="display: inline-block; float: left" />
         </form>
-        <div style="display: inline">Page: {{ ((old_offset/limit) + 1)|int }}</div>
+        {% endif %}
+
+        <div style="padding: 5px">Page {{ ((old_offset/limit) + 1)|round(0, 'ceil')|int }} of {{ ((count/limit))|round(0, 'ceil')|int }}</div>
+
+        {% if ((old_offset/limit) + 1)|round(0, 'ceil')|int != ((count/limit))|round(0, 'ceil')|int %}
         <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
             {% for skill in skills %}
                 <input type="hidden" name="skills[]" value="{{ skill }}" />
@@ -37,14 +40,15 @@ Search
 
             <input type="submit" value="Next Page" style="display: inline-block; float: left" />
         </form>
+        {% endif %}
     </div>
     <br />
-
-    <!-- The search results (populated by React.js) -->
-    <div id="card_container"></div>
-
-
+    <a href="{{ url_for('search') }}" style="align-self: center">New Search</a>
 </div>
+
+<!-- The search results (populated by React.js) -->
+<div id="card_container" style="display: flex; flex-direction: row; flex-wrap: wrap"></div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -57,9 +61,8 @@ Search
 <script type="text/babel">
     const Results = () => {
 				return (
-					<div>
+					<React.Fragment>
 						{% for user in results %}
-
 							{% if  loop.index % 2 == 0 %}
 								<ProfileCard
 									key="{{ loop.index }}"
@@ -81,9 +84,8 @@ Search
 									browser="{{ browser }}"
 								/>
 							{% endif %}
-
 						{% endfor %}
-					</div>
+					</React.Fragment>
 				)
 
 			}

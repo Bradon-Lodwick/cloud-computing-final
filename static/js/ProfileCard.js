@@ -31,7 +31,7 @@ class ProfileCard extends React.Component {
 			haslink = true;
 		}
 
-		if (this.state.width > 900) {
+		if (this.state.width > 1000) {
 			cardType = "-" + this.props.orientation;
 		}
 		else {
@@ -45,7 +45,7 @@ class ProfileCard extends React.Component {
 						<h2 className='title'> {this.props.name} </h2>
 					</div>
 					<div className={"picture" + cardType}>
-						<img src={this.props.photo} />
+						<img src={this.props.photo} width="200" height="200" />
 					</div>
 					<div className={"information" + cardType}>
 						<p className='description'>

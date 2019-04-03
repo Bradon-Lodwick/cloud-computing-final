@@ -201,7 +201,7 @@ class User(me.DynamicDocument):
 
         # Perform the search
         users = User.objects(**search).all()
-        return users[offset:limit], users.count()
+        return users[offset:limit+offset], users.count()
 
     def add_repo(self, url):
         """Adds a repo to the user's portfolio items.
