@@ -41,17 +41,23 @@
         </div>
     {% endfor %}
     </div>
+    <h2>Portfolio</h2>
+    <div id="card_container"></div>
 </div>
 {% endblock %}
 
 
 {% block scripts %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/videocard.css') }}">
 
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 <script src="{{ url_for('static', filename='js/DashboardCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/ImageCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
+
 <script type="text/babel">
             var skills =  {{ user.skills | tojson }}
 
@@ -69,4 +75,51 @@
 				document.getElementById('dashboard-card')
 			);
 </script>
+
+<script type="text/babel">
+			const Projects = () => {
+				return (
+					<div>
+						{% for project in user.portfolio %}
+
+							{% if  loop.index % 2 == 0 %}
+							{% set ori = "left" %}
+							{% else %}
+							{% set ori = "right" %}
+							{% endif %}
+
+                            {% if project.item_type == 'youtube' %}
+                                <VideoCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                />
+                            {% else %}
+                                <ImageCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url="{{ project.image.url }}"
+                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                />
+                            {% endif %}
+
+
+						{% endfor %}
+					</div>
+				)
+
+			}
+
+			ReactDOM.render(
+				<Projects />,
+				document.getElementById('card_container')
+			);
+		</script>
 {% endblock %}
