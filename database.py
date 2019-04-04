@@ -57,6 +57,7 @@ class Work(me.EmbeddedDocument):
     name = me.StringField(required=True, max_length=40)
     url = me.URLField()
     position = me.StringField()
+    description = me.StringField()
     start_date = me.DateField(required=True)
     end_date = me.DateField()
 

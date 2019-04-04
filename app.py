@@ -219,13 +219,14 @@ def edit_dashboard():
             # Get the work information from the form
             work_names = request.form.getlist('work_name[]')
             work_position = request.form.getlist('work_position[]')
+            work_description = request.form.getlist('work_description[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
             # Create the work history list
             work_history = list()
-            for name, position, start_date, end_date in zip(work_names, work_position, work_start_dates, work_end_dates):
+            for name, position, description, start_date, end_date in zip(work_names, work_position, work_description, work_start_dates, work_end_dates):
                 # Create the previous work position
-                work = db.Work(name=name, position=position, start_date=start_date, end_date=end_date)
+                work = db.Work(name=name, position=position, description=description, start_date=start_date, end_date=end_date)
                 work_history.append(work)
             # Set the previous work
             user.work_history = work_history

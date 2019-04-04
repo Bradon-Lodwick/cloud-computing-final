@@ -55,7 +55,7 @@ function add_work(entity, index) {
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >End Date:</label>" +
     "<div class='col'> " +
-        "<input name='workend_date[]' id='work_" + index + "_end_date_input' class='form-control' type='date'/>" +
+        "<input name='work_end_date[]' id='work_" + index + "_end_date_input' class='form-control' type='date'/>" +
     "</div>";
 
     add_validation(document.getElementById("work_" + index + "_name_input"));
