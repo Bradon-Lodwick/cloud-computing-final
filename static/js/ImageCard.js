@@ -1,6 +1,6 @@
 'use strict';
 
-class VideoCard extends React.Component {
+class ImageCard extends React.Component {
 	constructor (props){
 		super(props)
 		this.state = {
@@ -26,7 +26,7 @@ class VideoCard extends React.Component {
 		var cardType;
 		var haslink = false;
 
-		if (this.props.extraInfo != null){
+		if (this.props.extraInfo != ''){
 			haslink = true;
 		}
 
@@ -50,24 +50,19 @@ class VideoCard extends React.Component {
             </div>
 		)
 
-		var video_side = (
+		var image_side = (
             <div className="col-md-8">
-                <iframe
-                    width="100%"
-                    src={this.props.url.replace('/watch?v=', '/embed/')}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                />
+                <img src={this.props.url} className="image"/>
             </div>
+
 		)
 
 		return (
-		    <div className="col-md-12">
+			<div className="col-md-12">
 			    <div className="shadow-box">
 			        <div className="row">
-			            { this.props.orientation == 'left' ? video_side : text_side }
-			            { this.props.orientation == 'left' ? text_side : video_side }
+			            { this.props.orientation == 'left' ? image_side : text_side }
+			            { this.props.orientation == 'left' ? text_side : image_side }
                     </div>
                     { this.props.personal_page == 'true'
                         ?   <div className={"moreInfo" + cardType}>

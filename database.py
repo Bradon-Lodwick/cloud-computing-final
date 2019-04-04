@@ -24,14 +24,15 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
 class PortfolioItem(me.EmbeddedDocument):
-    _id = me.ObjectIdField()
-    item_type = me.StringField(choices=[])
+    _id = me.ObjectIdField(required=True, default=ObjectId)
+    item_type = me.StringField(choices=const.item_types)
     title = me.StringField()
     description = me.StringField()
+    file = me.EmbeddedDocumentField(File)
 
     # The given portfolio item types should only have 1 present, and the type will be loaded based on the item_type
     repo = me.EmbeddedDocumentField(Repo)
-    file = me.EmbeddedDocumentField(File)
+    image = me.EmbeddedDocumentField(File)
     youtube = me.URLField()
 
 
@@ -57,12 +58,14 @@ class Work(me.EmbeddedDocument):
     name = me.StringField(required=True, max_length=40)
     url = me.URLField()
     position = me.StringField()
+    description = me.StringField()
     start_date = me.DateField(required=True)
     end_date = me.DateField()
 
 
 class Identity(me.DynamicEmbeddedDocument):
     """Represents an identity the user connects with in the database."""
+    user_id = me.DynamicField(required=True, unique=True)
     provider = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
     isSocial = me.BooleanField(required=True, default=False)
     connection = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
@@ -169,7 +172,7 @@ class User(me.DynamicDocument):
             return None
 
     @staticmethod
-    def search(name=None, school_name=None, work_position=None, description=None, skills=None, limit=50, offset=0):
+    def search(name=None, school_name=None, work_position=None, description=None, skills=None, limit=25, offset=0):
         """ Used for default search queries. Any argument that is given as None will be ignored.
 
         Args:
@@ -188,14 +191,14 @@ class User(me.DynamicDocument):
         # Build the search criteria to pass into the user search
         search = dict()
         if name is not None and name != '':
-            search['name__iexact'] = name
+            search['name__icontains'] = name
         if school_name is not None and school_name != '':
-            search['education__name__iexact'] = school_name
+            search['education__name__icontains'] = school_name
         if work_position is not None and work_position != '':
-            search['work_history__position__iexact'] = work_position
+            search['work_history__position__icontains'] = work_position
         if description is not None and description != '':
             search['description__icontains'] = description
-        if skills is not None:
+        if skills is not None and len(skills) > 0:
             # Loop through all the skills and add them to the search
             search['skills__all'] = skills
 
@@ -203,20 +206,28 @@ class User(me.DynamicDocument):
         users = User.objects(**search).all()
         return users[offset:limit+offset], users.count()
 
-    def add_repo(self, url):
+    def add_repo(self, url, old_project=None):
         """Adds a repo to the user's portfolio items.
 
         Args:
             url (str): The url to the repo.
+            old_project (Repo): The old project with the repo in it. If set, the repo is updated rather than added.
         """
 
         # Only can add the repo if the user is a github user
         if self.is_github_user:
             new_repo = Repo(url, self.github_identity.user_id)
-            new_item = PortfolioItem(item_type='repo', repo=new_repo)
+            if old_project is None:
+                new_item = PortfolioItem(item_type='repo', repo=new_repo)
+                self.portfolio.append(new_item)
+                project_id = new_item._id
+            # Update the repo
+            else:
+                old_project.repo = new_repo
+                project_id = old_project._id
 
-            self.portfolio.append(new_item)
             self.save()
+            return project_id
         else:
             raise exc.IdentityError(self.user_id, 'github')
 

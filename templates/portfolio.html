@@ -1,13 +1,49 @@
 {% extends "layout.html" %}
 {% block title %}
-{{ session.profile.name }}'s dashboard
+{{ user.name }}'s Portfolio
 {% endblock %}
 
 {% block content %}
+{% endblock %}
+
+
+{% block scripts %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/videocard.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/custom.css') }}">
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script src="{{ url_for('static', filename='js/DashboardCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/WorkCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/EducationCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/AwardCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/ImageCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
+
+<div class="container" style="text-align: center;">
+    <script type="text/babel">
+                var skills =  {{ user.skills | tojson }}
+
+                ReactDOM.render(
+                    <DashboardCard
+                        name='{{ user.name }}'
+                        email='{{ user.email }}'
+                        url='{{ user.picture_normalized_url }}'
+                        description='{{user.description}}'
+                        skills={skills}
+                        show_button={true}
+                        linkname="Github"
+                        editpage="{{user.html_url}}"
+                    />,
+                    document.getElementById('dashboard-card')
+                );
+    </script>
+</div>
+
 <div class="container" style="text-align: center;">
     <div id="dashboard-card"></div>
 </div>
-
 <div class="container" style="background-color: white; padding: 16px; text-align:centre;">
     <div class="col-md-12">
         <h2>Education</h2>
@@ -45,43 +81,9 @@
     </div>
     <div class="col-md-12">
         <h2>Portfolio</h2>
-        <a href="{{ url_for('add_portfolio_item') }}">
-            <button type="button" id="add_portfolio_item_button" class="btn btn-primary col-sm-1 col-md-1 col-lg-1">Add</button>
-        </a>
     </div>
     <div id="card_container"></div>
 </div>
-{% endblock %}
-
-
-{% block scripts %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/videocard.css') }}">
-
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-<script src="{{ url_for('static', filename='js/DashboardCard.js') }}" type="text/babel"></script>
-<script src="{{ url_for('static', filename='js/ImageCard.js') }}" type="text/babel"></script>
-<script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
-
-<script type="text/babel">
-            var skills =  {{ user.skills | tojson }}
-
-            ReactDOM.render(
-				<DashboardCard
-				    name='{{ user.name }}'
-				    email='{{ user.email }}'
-				    url='{{ user.picture_normalized_url }}'
-				    description='{{user.description}}'
-				    skills={skills}
-				    show_button={true}
-				    linkname="Edit"
-				    editpage="{{ url_for('edit_dashboard') }}"
-				/>,
-				document.getElementById('dashboard-card')
-			);
-</script>
 
 <script type="text/babel">
 			const Projects = () => {
@@ -104,8 +106,7 @@
                                     extraInfo = "{{ project.file.url }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
-                                    personal_page='true'
-                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                    personal_page='false'
                                 />
                             {% elif project.item_type == 'pdf' %}
                                 <ImageCard
@@ -116,8 +117,7 @@
                                     extraInfo = "{{ project.file.url }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
-                                    personal_page='true'
-                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                    personal_page='false'
                                 />
                             {% elif project.item_type == 'repo' %}
                                 <ImageCard
@@ -128,8 +128,7 @@
                                     extraInfo = "{{ project.repo.html_url }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
-                                    personal_page='true'
-                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                    personal_page='false'
                                 />
                             {% elif project.item_type == 'file' %}
                                 <ImageCard
@@ -140,8 +139,7 @@
                                     extraInfo = "{{ project.file.url }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
-                                    personal_page='true'
-                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                    personal_page='false'
                                 />
                             {% elif project.item_type == 'youtube' %}
                                 <VideoCard
@@ -152,8 +150,7 @@
                                     extraInfo = "{{ project.youtube }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
-                                    personal_page='true'
-                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                    personal_page='false'
                                 />
                             {% endif %}
 						{% endfor %}

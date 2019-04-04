@@ -2,6 +2,7 @@
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	background-color: white;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -9,13 +10,13 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 900px;
 }
 
 .videoCardDiv-left {
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	background-color: white;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -23,7 +24,6 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 900px;
 }
 
 
@@ -31,6 +31,7 @@
 	margin-top: 32px;
 	margin-left: auto;
 	margin-right: auto;
+	background-color: white;
 
 	padding-left: 0px;
 	padding-right: 0px;
@@ -38,7 +39,6 @@
 	padding-bottom: 0px;
 
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-	width: 560px;
 }
 
 .videoCardGrid-right {
@@ -85,12 +85,14 @@
 	text-align: left;
 	grid-area: more;
 	align-self: end;
+	margin-top: 10px;
 }
 
 .moreInfo-left {
 	text-align: right;
 	grid-area: more;
 	align-self: end;
+	margin-top: 10px;
 }
 
 .moreInfo-compact {

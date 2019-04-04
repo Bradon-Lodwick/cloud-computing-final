@@ -6,12 +6,14 @@ __credits__ = ["Bradon Lodwick", "Reid Butson", "Chris Macleod", "Thomas Reis"]
 __version__ = "1.0.0"
 __status__ = "Production"
 
+import bson
 import logging
 import os
 import sys
 from authlib.flask.client import OAuth
+from bson import ObjectId
 from datetime import datetime
-from flask import Flask, session, redirect, render_template, url_for, request
+from flask import Flask, session, redirect, render_template, url_for, request, abort
 from six.moves.urllib.parse import urlencode
 
 import database as db
@@ -70,8 +72,8 @@ def get_current_user():
 @app.route('/')
 def home():
     """The home page for the app."""
-
-    return render_template('home.html')
+    browser = get_browser_type(request.headers.get('User-Agent'))
+    return render_template('home.html', browser=browser)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -219,13 +221,22 @@ def edit_dashboard():
             # Get the work information from the form
             work_names = request.form.getlist('work_name[]')
             work_position = request.form.getlist('work_position[]')
+            work_description = request.form.getlist('work_description[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
+
+
+
             # Create the work history list
             work_history = list()
-            for name, position, start_date, end_date in zip(work_names, work_position, work_start_dates, work_end_dates):
+            for name, position, description, start_date, end_date in zip(work_names, work_position, work_description, work_start_dates, work_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the previous work position
-                work = db.Work(name=name, position=position, start_date=start_date, end_date=end_date)
+                work = db.Work(name=name, position=position, description=description, start_date=start_date, end_date=end_date)
                 work_history.append(work)
             # Set the previous work
             user.work_history = work_history
@@ -235,27 +246,36 @@ def edit_dashboard():
             school_degrees = request.form.getlist('school_degree[]')
             school_start_dates = request.form.getlist('school_start_date[]')
             school_end_dates = request.form.getlist('school_end_date[]')
+
             # Create the education history list
             education_history = list()
             for name, degree, start_date, end_date in zip(school_names, school_degrees, school_start_dates, school_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the school
                 school = db.School(name=name, degree=degree, start_date=start_date, end_date=end_date)
                 education_history.append(school)
+
             # Set the education field
             user.education = education_history
 
             # Get the text information from the form
             data = request.form
+
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
-
             user.save()
+
             # Update the session info
             session['profile'] = {
                 'user_id': user.user_id,
                 'name': user.name_normalized,
                 'picture': user.picture_normalized_url
             }
+
             return redirect(url_for('dashboard'))
 
 
@@ -267,7 +287,9 @@ def dashboard():
     if not session['logged_in']:
         return redirect(url_for('home'))
     else:
-        return render_template('dashboard.html')
+        # Get the user's information from the database
+        user = get_current_user()
+        return render_template('dashboard.html', user=user)
 
 
 @app.route('/testpage')
@@ -318,11 +340,145 @@ def test():
     return render_template('testpage.html', browser=browser, projects=projects)
 
 
+@app.route('/<user_id>/portfolio', methods=['GET'])
+def portfolio(user_id):
+
+    # TODO: Sanitize the user_id before throwing it at the database
+
+    # Get the selected user from the database
+    user = db.User.objects(_id=user_id)[0]
+
+    # TODO: Check for invalid user
+
+    # Return the portfolio page
+    return render_template('portfolio.html', user=user)
+
+
 @app.route('/portfolio/new-project', methods=['GET', 'POST'])
 @requires_auth
 def add_portfolio_item():
     user = get_current_user()
-    return render_template('create_item.html', item_types=constants.item_types, user=user)
+
+    if request.method == 'POST':
+        # Get all the info from the form
+        item_type = request.form.get('type-input')
+        # Handle repos
+        if item_type == 'repo' and user.is_github_user:
+            repo_api_url = request.form.get('repo-api-url')
+            new_item_id = user.add_repo(repo_api_url)
+        # Handle all others that have input files
+        else:
+            # Get general fields
+            # Get the title
+            title = request.form.get('title-input')
+            # Get the description
+            description = request.form.get('description-input')
+
+            # Will hold the fields to pass into the portfolio item
+            item_fields = {
+                'title': title,
+                'description': description,
+                'item_type': item_type
+            }
+
+            # Get the file input
+            file_field = request.files.get('file-input')
+            if file_field.mimetype != 'application/octet-stream':
+                file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['file'] = file
+
+            # Check for item type to get other fields
+            if item_type == 'youtube':
+                youtube = request.form.get('youtube-url')
+                item_fields['youtube'] = youtube
+            elif item_type == 'image':
+                image_field = request.files.get('image-input')
+                image = File(file=image_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['image'] = image
+
+            # Save the portfolio item
+            new_item = db.PortfolioItem(**item_fields)
+            user.portfolio.append(new_item)
+            user.save()
+            new_item_id = new_item._id
+
+        # Get the new item's id to display the portfolio item's page
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template('create_item.html', item_types=constants.item_types, user=user)
+
+
+@app.route('/portfolio/edit/<item_id>', methods=['GET', 'POST'])
+@requires_auth
+def edit_portfolio_item(item_id):
+    user = get_current_user()
+    try:
+        searched_id = ObjectId(item_id)
+    except bson.errors.InvalidId:
+        return abort(404)
+    # Check the user's portfolio items to see if the requested item is in it.
+    try:
+        old_item = next(item for item in user.portfolio if item._id == searched_id)
+    except StopIteration:
+        return abort(404)
+
+    if request.method == 'POST':
+        # Check if the item needs to be deleted
+        delete = request.form.get('delete')
+        if delete is None:
+            # Handle repos
+            if old_item.item_type == 'repo' and user.is_github_user:
+                repo_api_url = request.form.get('repo-api-url')
+                # Update the repo
+                user.add_repo(repo_api_url, old_item)
+            # Handle all others that have input files
+            else:
+                # Get general fields
+                # Get the title
+                title = request.form.get('title-input')
+                # Get the description
+                description = request.form.get('description-input')
+
+                # Will hold the fields to pass into the portfolio item
+                item_fields = {
+                    'title': title,
+                    'description': description,
+                }
+
+                # Get the file input
+                file_field = request.files.get('file-input')
+                if file_field.mimetype != 'application/octet-stream':
+                    # Delete the old file if it exists
+                    if old_item.file is not None:
+                        old_item.file.delete()
+                    file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                    old_item.file = file
+
+                # Check for item type to get other fields
+                if old_item.item_type == 'youtube':
+                    youtube = request.form.get('youtube-url')
+                    item_fields['youtube'] = youtube
+                elif old_item.item_type == 'image':
+                    # Delete the old file if it exists
+                    if old_item.image is not None:
+                        old_item.image.delete()
+                    image_field = request.files.get('image-input')
+                    image = File(file=image_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                    old_item.image = image
+
+                # Update the portfolio item
+                for field, value in item_fields.items():
+                    setattr(old_item, field, value)
+                user.save()
+        # Delete the item
+        else:
+            user.update(pull__portfolio=old_item)
+            user.save()
+
+        # Get the new item's id to display the portfolio item's page
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template('edit_item.html', item_types=constants.item_types, user=user, item=old_item)
 
 
 # Run the app if this is the main file
