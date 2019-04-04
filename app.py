@@ -348,7 +348,7 @@ def portfolio(user_id):
     user = db.User.objects(_id=user_id)[0]
 
     # TODO: Check for invalid user
-    
+
     # Return the portfolio page
     return render_template('portfolio.html', user=user)
 
