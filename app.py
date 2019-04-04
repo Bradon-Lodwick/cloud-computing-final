@@ -389,7 +389,7 @@ def add_portfolio_item():
 
             # Check for item type to get other fields
             if item_type == 'youtube':
-                youtube = request.form.get('youtube-input')
+                youtube = request.form.get('youtube-url')
                 item_fields['youtube'] = youtube
             elif item_type == 'image':
                 image_field = request.files.get('image-input')
@@ -456,7 +456,7 @@ def edit_portfolio_item(item_id):
 
                 # Check for item type to get other fields
                 if old_item.item_type == 'youtube':
-                    youtube = request.form.get('youtube-input')
+                    youtube = request.form.get('youtube-url')
                     item_fields['youtube'] = youtube
                 elif old_item.item_type == 'image':
                     # Delete the old file if it exists
