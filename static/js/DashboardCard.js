@@ -37,6 +37,7 @@ class DashboardCard extends React.Component {
 				<div className={'information' + cardType}>
 					<h1> {this.props.name} </h1>
 					<h2> {this.props.email} </h2>
+					<p> {this.props.description} </p>
 				</div>
 				<a href={this.props.editpage} className='edit-button'>Edit</a>
 				<div className='skills'>
