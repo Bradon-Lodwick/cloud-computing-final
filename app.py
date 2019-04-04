@@ -286,7 +286,8 @@ def dashboard():
     if not session['logged_in']:
         return redirect(url_for('home'))
     else:
-        return render_template('dashboard.html')
+        user = get_current_user()
+        return render_template('dashboard.html', user=user)
 
 
 @app.route('/testpage')
