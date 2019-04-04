@@ -1,9 +1,14 @@
 {% extends "layout.html" %}
 {% block title %}
-{{ session.profile.name }}'s dashboard | Student Profile Viewer
+{{ session.profile.name }}'s dashboard | Portfol.io
 {% endblock %}
 
 {% block content %}
+<div id="dashboard-card"></div>
+{% endblock %}
+
+
+{% block scripts %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
 
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -17,16 +22,11 @@
 				<DashboardCard
 				    name='{{ user.name }}'
 				    email='{{ user.email }}'
-				    url='{{ user.picture }}'
+				    url='{{ user.picture_normalized_url }}'
 				    skills={skills}
 				    editpage="{{ url_for('edit_dashboard') }}"
 				/>,
 				document.getElementById('dashboard-card')
 			);
 </script>
-
-
-<div id="dashboard-card"></div>
-
-
 {% endblock %}

@@ -338,6 +338,19 @@ def test():
     return render_template('testpage.html', browser=browser, projects=projects)
 
 
+@app.route('/portfolio/<user>', methods=['GET'])
+def portfolio():
+
+    # Make sure user exists
+
+    # Load projects from DB
+
+
+
+    # TODO: Everything
+    return render_template('portfolio.html')
+
+
 @app.route('/portfolio/new-project', methods=['GET', 'POST'])
 @requires_auth
 def add_portfolio_item():
