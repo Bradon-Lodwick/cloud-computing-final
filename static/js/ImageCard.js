@@ -52,7 +52,7 @@ class ImageCard extends React.Component {
 
 		var image_side = (
             <div className="col-md-6">
-                <img src={this.props.url} className="image" width="auto" height="400"/>
+                <img src={this.props.url} className="image" width="auto" height="auto"/>
             </div>
 
 		)
