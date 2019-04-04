@@ -1,76 +1,71 @@
 $(function() {
-    $('#type-input').on('change', async function(){
-        if ($(this).val() === "repo") {
-            /* Hide the file section and youtube section and add the repo section */
-            $('#file-upload-group').hide();
-            $('#file-upload-group :input').prop("disabled", true);
+    if (item_type === "repo") {
+        /* Hide the file section and youtube section and add the repo section */
+        $('#file-upload-group').hide();
+        $('#file-upload-group :input').prop("disabled", true);
 
-            $('#repo-group').show();
-            $('#repo-group :input').prop("disabled", false);
+        $('#repo-group').show();
+        $('#repo-group :input').prop("disabled", false);
 
-            $('#general-input').hide();
-            $('#general-input :input').prop("disabled", true);
+        $('#general-input').hide();
+        $('#general-input :input').prop("disabled", true);
 
-            $('#image-group').hide();
-            $('#image-group :input').prop("disabled", true);
+        $('#image-group').hide();
+        $('#image-group :input').prop("disabled", true);
 
-            $('#youtube-group').hide();
-            $('#youtube-group :input').prop("disabled", true);
+        $('#youtube-group').hide();
+        $('#youtube-group :input').prop("disabled", true);
+    }
+    else if (item_type === "youtube") {
+        /* Hide the file section and the repo sections add the youtube section */
+        $('#file-upload-group').show();
+        $('#file-upload-group :input').prop("disabled", false);
 
-            // Populate the repo
-            await check_repo();
-        }
-        else if ($(this).val() === "youtube") {
-            /* Hide the file section and the repo sections add the youtube section */
-            $('#file-upload-group').show();
-            $('#file-upload-group :input').prop("disabled", false);
+        $('#repo-group').hide();
+        $('#repo-group :input').prop("disabled", true);
 
-            $('#repo-group').hide();
-            $('#repo-group :input').prop("disabled", true);
+        $('#general-input').show();
+        $('#general-input :input').prop("disabled", false);
 
-            $('#general-input').show();
-            $('#general-input :input').prop("disabled", false);
+        $('#image-group').hide();
+        $('#image-group :input').prop("disabled", true);
 
-            $('#image-group').hide();
-            $('#image-group :input').prop("disabled", true);
+        $('#youtube-group').show();
+        $('#youtube-group :input').prop("disabled", false);
+    }
+    else if (item_type === "image") {
+        $('#file-upload-group').show();
+        $('#file-upload-group :input').prop("disabled", false);
 
-            $('#youtube-group').show();
-            $('#youtube-group :input').prop("disabled", false);
-        }
-        else if ($(this).val() === "image") {
-            $('#file-upload-group').show();
-            $('#file-upload-group :input').prop("disabled", false);
+        $('#repo-group').hide();
+        $('#repo-group :input').prop("disabled", true);
 
-            $('#repo-group').hide();
-            $('#repo-group :input').prop("disabled", true);
+        $('#general-input').show();
+        $('#general-input :input').prop("disabled", false);
 
-            $('#general-input').show();
-            $('#general-input :input').prop("disabled", false);
+        $('#image-group').show();
+        $('#image-group :input').prop("disabled", false);
 
-            $('#image-group').show();
-            $('#image-group :input').prop("disabled", false);
+        $('#youtube-group').hide();
+        $('#youtube-group :input').prop("disabled", true);
+    }
+    else {
+        /* Hide the youtube section and the repo section and add the file section */
+        $('#file-upload-group').show();
+        $('#file-upload-group :input').prop("disabled", false);
 
-            $('#youtube-group').hide();
-            $('#youtube-group :input').prop("disabled", true);
-        }
-        else {
-            /* Hide the youtube section and the repo section and add the file section */
-            $('#file-upload-group').show();
-            $('#file-upload-group :input').prop("disabled", false);
+        $('#repo-group').hide();
+        $('#repo-group :input').prop("disabled", true);
 
-            $('#repo-group').hide();
-            $('#repo-group :input').prop("disabled", true);
+        $('#general-input').show();
+        $('#general-input :input').prop("disabled", false);
 
-            $('#general-input').show();
-            $('#general-input :input').prop("disabled", false);
+        $('#image-group').hide();
+        $('#image-group :input').prop("disabled", true);
 
-            $('#image-group').hide();
-            $('#image-group :input').prop("disabled", true);
-
-            $('#youtube-group').hide();
-            $('#youtube-group :input').prop("disabled", true);
-        }
-    });
+        $('#youtube-group').hide();
+        $('#youtube-group :input').prop("disabled", true);
+    }
 
     $('#file-input').change(function(e) {
         $('#file-name').val(e.target.files[0].name);
@@ -129,10 +124,6 @@ $(function() {
     }
 
     $('#check-other-repo').click(async function() {
-        await check_repo();
-    });
-
-    async function check_repo() {
         /* Get the username/repo-name that was given */
         var endpoint = 'https://api.github.com/repos/' + $('#repo-url').val();
 
@@ -150,7 +141,23 @@ $(function() {
         $('#repo-forks-display').text(repo.forks_count);
 
         $('#repo-output-div').show();
-    };
+    });
 
+    $('#edit-button').click(function() {
+        submit_form(false);
+    });
+    $('#delete-button').click(function() {
+        submit_form(true);
+    });
+
+    function submit_form(del) {
+        if (del) {
+            $('#delete').prop("checked", true)
+        }
+        else {
+            $('#delete').prop("checked", false)
+        }
+        $('#edit-form').submit();
+    }
 });
 
