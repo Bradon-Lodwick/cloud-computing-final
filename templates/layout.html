@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %} | Student Profile Viewer</title>
+    <title>{% block title %}{% endblock %} | Portfol.io</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -19,7 +21,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{{ url_for('home') }}">Student Profile Viewer</a>
+            <a class="navbar-brand" href="{{ url_for('home') }}">Portfol.io</a>
         </div> <ul class="nav navbar-nav">
             {% if request.path == url_for('home') %}
             <li class="active"><a href="{{ url_for('home') }}">Home</a></li>

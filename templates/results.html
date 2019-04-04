@@ -48,7 +48,6 @@ Search
 
 <!-- The search results (populated by React.js) -->
 <div id="card_container" style="display: flex; flex-direction: row; flex-wrap: wrap"></div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -69,7 +68,7 @@ Search
 									name="{{ user.name }}"
 									photo="{{ user.picture }}"
 									url="{{ url_for('home') }}"
-									description="LMTH.STLUSER MORF NOITPIRCSED ELPMAS"
+									description="{{ user.description }}"
 									orientation="right"
 									browser="{{ browser }}"
 								/>
@@ -79,7 +78,7 @@ Search
 									name="{{ user.name }}"
 									photo="{{ user.picture }}"
 									url="{{ url_for('home') }}"
-									description="SAMPLE DESCRIPTION FROM RESULTS.HTML"
+									description="{{ user.description }}"
 									orientation="left"
 									browser="{{ browser }}"
 								/>

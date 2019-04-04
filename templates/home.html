@@ -6,20 +6,60 @@ Home
 
 {% block content %}
 <div class="jumbotron text-center">
-    <h1>Student Profile Viewer</h1>
-    <p>Create your profile and get noticed by employers today!</p>
+    <h1>Portfol.io</h1>
+    <p>Create your Portfolio and get noticed by employers today!</p>
 
     <br />
 
     <div class="text-center mt-4">
-        <a class="btn-x1 btn-outline-light" href="{{ url_for('login') }}">
-            Create Profile
-        </a>
-        |
-        <a class="btn-x1 btn-outline-light" href="{{ url_for('search') }}">
-            Search Profiles
-        </a>
+      <label>
+        Are you a recruiter?
+      </label>
+      <a class="btn-x1 btn-outline-light" href="{{ url_for('search') }}">
+          Search Profiles!
+      </a>
     </div>
+</div>
+<div class="container">
+  <div id="card_container"></div>
+</div>
+
+<div class="container">
+  <div class="col-lg-3 col-md-3 col-sm-3">
+      <img  id="portfolio_img" src="https://i.imgur.com/7h0JauW.jpg" class="img-responsive" alt="Portfolio">
+  </div>
+  <div class="col-lg-8 col-md-8 col-sm-8">
+      <h1>Create a Professional Portfolio and Get Hired Today!</h1>
+      <p>The options are diverse and flexible in how you wish to upload your portfolio items:</p>
+      <ul>
+          <li>Images</li>
+          <li>PDFs</li>
+          <li>Video links</li>
+          <li>Github Repos</li>
+          <li>Other files (eg. MP3/WAV files)</li>
+      </ul>
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/videocard.css') }}">
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
+
+  <script type="text/babel">
+      ReactDOM.render(
+        <VideoCard
+            key="1"
+            title="Sign up Today!"
+            description="Experience the benefits of having a professional profile today"
+            url="https://www.youtube.com/watch?v=L_LUpnjgPso"
+            orientation="right"
+            browser="{{ browser }}"
+        />,
+          document.getElementById('card_container')
+      );
+  </script>
 
 </div>
+
 {% endblock %}

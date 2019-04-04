@@ -172,7 +172,7 @@ class User(me.DynamicDocument):
             return None
 
     @staticmethod
-    def search(name=None, school_name=None, work_position=None, description=None, skills=None, limit=50, offset=0):
+    def search(name=None, school_name=None, work_position=None, description=None, skills=None, limit=25, offset=0):
         """ Used for default search queries. Any argument that is given as None will be ignored.
 
         Args:
@@ -191,14 +191,14 @@ class User(me.DynamicDocument):
         # Build the search criteria to pass into the user search
         search = dict()
         if name is not None and name != '':
-            search['name__iexact'] = name
+            search['name__icontains'] = name
         if school_name is not None and school_name != '':
-            search['education__name__iexact'] = school_name
+            search['education__name__icontains'] = school_name
         if work_position is not None and work_position != '':
-            search['work_history__position__iexact'] = work_position
+            search['work_history__position__icontains'] = work_position
         if description is not None and description != '':
             search['description__icontains'] = description
-        if skills is not None:
+        if skills is not None and len(skills) > 0:
             # Loop through all the skills and add them to the search
             search['skills__all'] = skills
 
