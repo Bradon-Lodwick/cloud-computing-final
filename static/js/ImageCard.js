@@ -41,7 +41,7 @@ class ImageCard extends React.Component {
 			<div className="col-md-12">
 			    <div className="shadow-box">
 			        <div className="row">
-			            <div className="col-md-4">
+			            <div className={this.props.orientation == 'left' ? "col-md-4" : "col-md-8"}>
                             <div className="row">
                                 <h2 className='title'> {this.props.title} </h2>
                             </div>
@@ -51,16 +51,16 @@ class ImageCard extends React.Component {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-md-8">
+			            <div className={this.props.orientation == 'left' ? "col-md-8" : "col-md-4"}>
                             <img src={this.props.url} className="image"/>
                         </div>
                     </div>
                     { haslink
-                            ?	<div className={"moreInfo" + cardType}>
-                                    <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
-                                </div>
-                            : <div />
-                        }
+                        ?	<div className={"moreInfo" + cardType}>
+                                <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
+                            </div>
+                        : <div />
+                    }
 				</div>
 			</div>
 		)
