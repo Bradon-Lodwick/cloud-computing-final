@@ -222,9 +222,17 @@ def edit_dashboard():
             work_description = request.form.getlist('work_description[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
+
+
+
             # Create the work history list
             work_history = list()
             for name, position, description, start_date, end_date in zip(work_names, work_position, work_description, work_start_dates, work_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the previous work position
                 work = db.Work(name=name, position=position, description=description, start_date=start_date, end_date=end_date)
                 work_history.append(work)
@@ -236,27 +244,36 @@ def edit_dashboard():
             school_degrees = request.form.getlist('school_degree[]')
             school_start_dates = request.form.getlist('school_start_date[]')
             school_end_dates = request.form.getlist('school_end_date[]')
+
             # Create the education history list
             education_history = list()
             for name, degree, start_date, end_date in zip(school_names, school_degrees, school_start_dates, school_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the school
                 school = db.School(name=name, degree=degree, start_date=start_date, end_date=end_date)
                 education_history.append(school)
+
             # Set the education field
             user.education = education_history
 
             # Get the text information from the form
             data = request.form
+
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
-
             user.save()
+
             # Update the session info
             session['profile'] = {
                 'user_id': user.user_id,
                 'name': user.name_normalized,
                 'picture': user.picture_normalized_url
             }
+
             return redirect(url_for('dashboard'))
 
 
