@@ -10,6 +10,7 @@ import logging
 import os
 import sys
 from authlib.flask.client import OAuth
+from bson import ObjectId
 from datetime import datetime
 from flask import Flask, session, redirect, render_template, url_for, request
 from six.moves.urllib.parse import urlencode
@@ -222,9 +223,17 @@ def edit_dashboard():
             work_description = request.form.getlist('work_description[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
+
+
+
             # Create the work history list
             work_history = list()
             for name, position, description, start_date, end_date in zip(work_names, work_position, work_description, work_start_dates, work_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the previous work position
                 work = db.Work(name=name, position=position, description=description, start_date=start_date, end_date=end_date)
                 work_history.append(work)
@@ -236,27 +245,36 @@ def edit_dashboard():
             school_degrees = request.form.getlist('school_degree[]')
             school_start_dates = request.form.getlist('school_start_date[]')
             school_end_dates = request.form.getlist('school_end_date[]')
+
             # Create the education history list
             education_history = list()
             for name, degree, start_date, end_date in zip(school_names, school_degrees, school_start_dates, school_end_dates):
+
+                # Allow end date to be empty (database won't accept empty string)
+                if end_date == '':
+                    end_date = None
+
                 # Create the school
                 school = db.School(name=name, degree=degree, start_date=start_date, end_date=end_date)
                 education_history.append(school)
+
             # Set the education field
             user.education = education_history
 
             # Get the text information from the form
             data = request.form
+
             # Pass the data into the user object to update
             user, errors = db.user_update_schema.update(user, data)
-
             user.save()
+
             # Update the session info
             session['profile'] = {
                 'user_id': user.user_id,
                 'name': user.name_normalized,
                 'picture': user.picture_normalized_url
             }
+
             return redirect(url_for('dashboard'))
 
 
@@ -324,7 +342,55 @@ def test():
 @requires_auth
 def add_portfolio_item():
     user = get_current_user()
-    return render_template('create_item.html', item_types=constants.item_types, user=user)
+
+    if request.method == 'POST':
+        # Get all the info from the form
+        item_type = request.form.get('type-input')
+        # Handle repos
+        if item_type == 'repo' and user.is_github_user:
+            repo_api_url = request.form.get('repo-api-url')
+            new_item_id = user.add_repo(repo_api_url)
+        # Handle all others that have input files
+        else:
+            # Get general fields
+            # Get the title
+            title = request.form.get('title-input')
+            # Get the description
+            description = request.form.get('description-input')
+
+            # Will hold the fields to pass into the portfolio item
+            item_fields = {
+                'title': title,
+                'description': description,
+                'item_type': item_type
+            }
+
+            # Get the file input
+            file_field = request.files.get('file-input')
+            if file_field.content_length != 0:
+                file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['file'] = file
+
+            # Check for item type to get other fields
+            if item_type == 'youtube':
+                youtube = request.form.get('youtube-input')
+                item_fields['youtube'] = youtube
+            elif item_type == 'image':
+                image_field = request.files.get('image-input')
+                image = File(file=image_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['image'] = image
+
+            # Save the portfolio item
+            new_item = db.PortfolioItem(**item_fields)
+            user.portfolio.append(new_item)
+            user.save()
+            new_item_id = new_item._id
+
+        # Get the new item's id to display the portfolio item's page
+        # TODO replace the return with proper return
+        return render_template('create_item.html', item_types=constants.item_types, user=user)
+    else:
+        return render_template('create_item.html', item_types=constants.item_types, user=user)
 
 
 # Run the app if this is the main file

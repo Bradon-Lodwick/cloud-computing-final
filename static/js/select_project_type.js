@@ -10,17 +10,45 @@ $(function() {
 
             $('#general-input').hide();
             $('#general-input :input').prop("disabled", true);
+
+            $('#image-group').hide();
+            $('#image-group :input').prop("disabled", true);
+
+            $('#youtube-group').hide();
+            $('#youtube-group :input').prop("disabled", true);
         }
         else if ($(this).val() === "youtube") {
             /* Hide the file section and the repo sections add the youtube section */
-            $('#file-upload-group').hide();
-            $('#file-upload-group :input').prop("disabled", true);
+            $('#file-upload-group').show();
+            $('#file-upload-group :input').prop("disabled", false);
 
             $('#repo-group').hide();
             $('#repo-group :input').prop("disabled", true);
 
             $('#general-input').show();
             $('#general-input :input').prop("disabled", false);
+
+            $('#image-group').hide();
+            $('#image-group :input').prop("disabled", true);
+
+            $('#youtube-group').show();
+            $('#youtube-group :input').prop("disabled", false);
+        }
+        else if ($(this).val() === "image") {
+            $('#file-upload-group').show();
+            $('#file-upload-group :input').prop("disabled", false);
+
+            $('#repo-group').hide();
+            $('#repo-group :input').prop("disabled", true);
+
+            $('#general-input').hide();
+            $('#general-input :input').prop("disabled", true);
+
+            $('#image-group').show();
+            $('#image-group :input').prop("disabled", false);
+
+            $('#youtube-group').hide();
+            $('#youtube-group :input').prop("disabled", true);
         }
         else {
             /* Hide the youtube section and the repo section and add the file section */
@@ -32,6 +60,12 @@ $(function() {
 
             $('#general-input').show();
             $('#general-input :input').prop("disabled", false);
+
+            $('#image-group').hide();
+            $('#image-group :input').prop("disabled", true);
+
+            $('#youtube-group').hide();
+            $('#youtube-group :input').prop("disabled", true);
         }
     });
 
@@ -43,6 +77,16 @@ $(function() {
         $('#file-input').wrap('<form>').closest('form').get(0).reset();
         $('#file-input').unwrap();
         $('#file-name').val('');
+    });
+
+    $('#image-input').change(function(e) {
+        $('#image-name').val(e.target.files[0].name);
+    });
+
+    $('#clear-image').click(function(){
+        $('#image-input').wrap('<form>').closest('form').get(0).reset();
+        $('#image-input').unwrap();
+        $('#image-name').val('');
     });
 
     async function get_repo_data(repo_endpoint) {
@@ -74,7 +118,7 @@ $(function() {
         }
         else {
             // Set the repo api url
-            $('#repo-api-url').val(endpoint);
+            $('#repo-api-url').val(repo_endpoint);
             $('#repo-api-url').prop("disabled", false);
             return repo;
         }

@@ -60,7 +60,7 @@
             </div>
             <br>
             <div class="col-md-3 col-sm-3"></div>
-            <div class="col-md-9 col-sm-9 edit-profile-row">
+            <div class="col-md-9 col-sm-9 edit-profile-row" >
                 <label class="col-lg-1 control-label">Awards:</label>
                 <button type="button" onclick="add_award_handler()" id="add_award_button" style="col-lg-1" class="btn btn-primary">Add</button>
                 {% for award in user.awards %}
@@ -208,8 +208,8 @@
                 {% endfor %}
             </div>
             <br>
-            <div class="col-md-3 col-sm-3"></div>
-            <div class="col-md-9 edit-profile-row">
+            <div class="col-lg-3 col-md-3 col-sm-3"></div>
+            <div class="col-lg-3 col-md-9 col-sm-9 edit-profile-row">
                 <input id="profile_submit" type="submit" value="Submit" class="btn btn-primary btn-large">
             </div>
         </form>
