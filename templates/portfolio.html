@@ -4,11 +4,60 @@
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron text-center" >
-    <p>Ha ha, I'm in danger</p>
+<div style="background-color:#ffffff">
+    <p>Github URL {{ user.html_url }}</p>
+    <p>Education {{ user.education }}</p>
+    <p>Awards {{ user.awards }}</p>
+    <p>Work History {{ user.work_history }}</p>
+    <p>Portfolio {{ user.portfolio }}</p>
 </div>
+
+<div style="text-align: center;">
+    <div id="dashboard-card"></div>
+</div>
+
+
+<!--
+    html_url = me.URLField()  # GITHUB PROFILE URL
+
+    # Allows the user to store their schooling information
+    education = me.EmbeddedDocumentListField(School)
+
+    # Allows the user to store any awards they want displayed on their page
+    awards = me.EmbeddedDocumentListField(Award)
+
+    # Allows the user to store their previous work history
+    work_history = me.EmbeddedDocumentListField(Work)
+
+    # Portfolio holds a list of portfolio items for their page
+    portfolio = me.EmbeddedDocumentListField(PortfolioItem)
+-->
+
+
 {% endblock %}
 
 
 {% block scripts %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
+
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script src="{{ url_for('static', filename='js/DashboardCard.js') }}" type="text/babel"></script>
+<script type="text/babel">
+            var skills =  {{ user.skills | tojson }}
+
+            ReactDOM.render(
+				<DashboardCard
+				    name='{{ user.name }}'
+				    email='{{ user.email }}'
+				    url='{{ user.picture_normalized_url }}'
+				    description='{{user.description}}'
+				    skills={skills}
+				    show_button={false}
+				    editpage=""
+				/>,
+				document.getElementById('dashboard-card')
+			);
+</script>
 {% endblock %}

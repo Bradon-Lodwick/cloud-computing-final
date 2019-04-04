@@ -31,6 +31,12 @@ class DashboardCard extends React.Component {
 			cardType = "-compact"
 		}
 
+		var edit_button = <React.Fragment />;
+		if (this.props.show_button) {
+		    edit_button = <a href={this.props.editpage} className='edit-button'>{this.props.linkname}</a>;
+		}
+
+
 		return (
 			<div className={'profile-card-back' + cardType}>
 				<div className='profile-image' style={{backgroundImage: "url('" + this.props.url + "')"}}/>
@@ -39,7 +45,7 @@ class DashboardCard extends React.Component {
 					<h2> {this.props.email} </h2>
 					<p> {this.props.description} </p>
 				</div>
-				<a href={this.props.editpage} className='edit-button'>Edit</a>
+				{edit_button}
 				<div className='skills'>
 					<div className={'skills-grid' + cardType}>
 						{
