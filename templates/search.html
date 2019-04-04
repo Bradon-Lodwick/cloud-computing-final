@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Search | Portfol.io
+Search
 {% endblock %}
 
 {% block content %}
@@ -14,9 +14,9 @@ Search | Portfol.io
         <p>Find users with these skills:</p>
         <div style="display: flex; flex-direction: row; flex-wrap: wrap">
             {% for skill in skills %}
-                    <div class="col-md-3" style="flex-basis: 10%;">
-                        <input type="checkbox" class="form-control" name="skills[]" value="{{ skill }}"> {{ skill }}<br />
-                    </div>
+                <div class="col-md-3" style="flex-basis: 10%;">
+                    <input type="checkbox" class="form-control" name="skills[]" value="{{ skill }}"> {{ skill }}<br />
+                </div>
             {% endfor %}
         </div>
         <br />

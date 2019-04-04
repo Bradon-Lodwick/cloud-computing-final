@@ -62,6 +62,8 @@
 				    url='{{ user.picture_normalized_url }}'
 				    description='{{user.description}}'
 				    skills={skills}
+				    show_button={true}
+				    linkname="Edit"
 				    editpage="{{ url_for('edit_dashboard') }}"
 				/>,
 				document.getElementById('dashboard-card')
