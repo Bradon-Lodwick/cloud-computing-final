@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+<script src="{{ url_for('static', filename='js/profile_validation.js') }}"></script>
 <div class="container">
     <h1>Edit Profile</h1>
   	<hr>
@@ -67,13 +68,16 @@
                         <button id="award_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete Award</button>
                         <script>
                             document.getElementById("award_delete_{{loop.index}}").addEventListener("click", function(e) {
+                            remove_validation("award_{{loop.index}}_name_input");
+                                remove_validation("award_{{loop.index}}_name_input");
+                                validate_all()
                                 remove_award(document.getElementById("award_{{loop.index}}"))
                             });
                         </script>
                         <div class="edit-profile-row column col-md-12">
                             <label class='col column control-label'>Award Name (Required):</label>
                             <div class='col'>
-                                <input name='award_name[]' id='award_{{loop.index}}_name_input' class='form-control column' type='text' value='{{award.name}}' />
+                                <input aria-invalid="true" onkeyup='validate_all()' name='award_name[]' id='award_{{loop.index}}_name_input' class='form-control column' type='text' value='{{award.name}}' />
                             </div>
                             <label class='col control-label' style='margin-top: 10px'>Award Description:</label>
                             <div class='col' style='margin-top: 10px;'>
@@ -102,6 +106,9 @@
                             </div>
                         </div>
                     </div>
+                    <script>
+                        add_validation(document.getElementById("award_{{loop.index}}_name_input"));
+                    </script>
                 {% endfor %}
             </div>
             <div class="col-md-3 col-sm-3"></div>
@@ -113,6 +120,9 @@
                         <button id="work_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete Job</button>
                         <script>
                             document.getElementById("work_delete_{{loop.index}}").addEventListener("click", function(e) {
+                                remove_validation("work_{{loop.index}}_name_input");
+                                remove_validation("work_{{loop.index}}_start_date_input");
+                                validate_all();
                                 remove_work(document.getElementById("work_{{loop.index}}"))
                             });
                         </script>
@@ -120,7 +130,7 @@
                             <!-- Company Name -->
                             <label class='col column control-label'>Company Name (Required):</label>
                             <div class='col'>
-                                <input name='work_name[]' id='work_{{loop.index}}_name_input' class='form-control column' type='text' value='{{work.name}}' />
+                                <input onkeyup='validate_all()' name='work_name[]' id='work_{{loop.index}}_name_input' class='form-control column' type='text' value='{{work.name}}' />
                             </div>
                             <!-- Position Title -->
                             <label class='col column control-label'>Position Title:</label>
@@ -136,15 +146,19 @@
                             <!-- Start Date -->
                             <label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>
                             <div class='col'>
-                                <input name='job_start_date[]' id='job_{{loop.index}}_start_date_input' value="{{work.start_date}}" class='form-control column' type='date'/>
+                                <input onkeyup='validate_all()' name='work_start_date[]' id='work_{{loop.index}}_start_date_input' value="{{work.start_date}}" class='form-control column' type='date'/>
                             </div>
                             <!-- End Date -->
                            <label class='col control-label' style='margin-top: 10px' >End Date:</label>
                             <div class='col'>
-                                <input name='job_end_date[]' id='job_{{loop.index}}_end_date_input' value="{{work.end_date}}" class='form-control column' type='date'/>
+                                <input name='work_end_date[]' id='work_{{loop.index}}_end_date_input' value="{{work.end_date}}" class='form-control column' type='date'/>
                             </div>
                         </div>
                     </div>
+                    <script>
+                        add_validation(document.getElementById("work_{{loop.index}}_name_input"));
+                        add_validation(document.getElementById("work_{{loop.index}}_start_date_input"));
+                    </script>
                 {% endfor %}
             </div>
             <div class="col-md-3 col-sm-3"></div>
@@ -156,6 +170,10 @@
                         <button id="school_delete_{{loop.index}}" class="btn btn-danger" type="button">Delete</button>
                         <script>
                             document.getElementById("school_delete_{{loop.index}}").addEventListener("click", function(e) {
+                                remove_validation("school_{{loop.index}}_name_input");
+                                remove_validation("school_{{loop.index}}_degree_input");
+                                remove_validation("school_{{loop.index}}_start_date_input");
+                                validate_all();
                                 remove_school(document.getElementById("school_{{loop.index}}"))
                             });
                         </script>
@@ -163,12 +181,12 @@
                             <!-- School Name -->
                             <label class='col column control-label'>School Name (Required):</label>
                             <div class='col'>
-                                <input name='school_name[]' id='school_{{loop.index}}_name_input' class='form-control column' type='text' value='{{school.name}}' />
+                                <input onkeyup='validate_all()' name='school_name[]' id='school_{{loop.index}}_name_input' class='form-control column' type='text' value='{{school.name}}' />
                             </div>
                             <!-- Degree -->
                             <label class='col column control-label'>Degree (Required):</label>
                             <div class='col'>
-                                <input name='school_degree[]' id='school_{{loop.index}}_degree_input' class='form-control column' type='text' value='{{school.degree}}' />
+                                <input onkeyup='validate_all()' name='school_degree[]' id='school_{{loop.index}}_degree_input' class='form-control column' type='text' value='{{school.degree}}' />
                             </div>
                             <!-- Start Date -->
                             <label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>
@@ -178,16 +196,21 @@
                             <!-- End Date -->
                            <label class='col control-label' style='margin-top: 10px' >End Date (Or Estimated End Date):</label>
                             <div class='col'>
-                                <input name='school_end_date[]' id='school_{{loop.index}}_end_date_input' value="{{school.end_date}}" class='form-control column' type='date'/>
+                                <input onkeyup='validate_all()' name='school_end_date[]' id='school_{{loop.index}}_end_date_input' value="{{school.end_date}}" class='form-control column' type='date'/>
                             </div>
                         </div>
                     </div>
+                    <script>
+                        add_validation(document.getElementById("school_{{loop.index}}_name_input"));
+                        add_validation(document.getElementById("school_{{loop.index}}_degree_input"));
+                        add_validation(document.getElementById("school_{{loop.index}}_start_date_input"));
+                    </script>
                 {% endfor %}
             </div>
             <br>
             <div class="col-md-3 col-sm-3"></div>
             <div class="col-md-9 edit-profile-row">
-                <input type="submit" value="Submit" class="btn btn-primary btn-large">
+                <input id="profile_submit" type="submit" value="Submit" class="btn btn-primary btn-large">
             </div>
         </form>
     </div>
@@ -217,10 +240,12 @@
     }
 
     function add_work_handler(){
+        num_work += 1;
         add_work(document.getElementById("add_work_button"), num_work)
     }
 
     function add_school_handler(){
+        num_schools += 1;
         add_school(document.getElementById("add_school_button"), num_schools)
     }
 </script>

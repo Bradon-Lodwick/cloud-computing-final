@@ -25,7 +25,7 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 class PortfolioItem(me.EmbeddedDocument):
     _id = me.ObjectIdField()
-    item_type = me.StringField(choices=['repo', 'image', 'pdf', 'file', 'youtube', None])
+    item_type = me.StringField(choices=[])
     title = me.StringField()
     description = me.StringField()
 
@@ -187,13 +187,13 @@ class User(me.DynamicDocument):
 
         # Build the search criteria to pass into the user search
         search = dict()
-        if name is not None:
+        if name is not None and name != '':
             search['name__iexact'] = name
-        if school_name is not None:
+        if school_name is not None and school_name != '':
             search['education__name__iexact'] = school_name
-        if work_position is not None:
+        if work_position is not None and work_position != '':
             search['work_history__position__iexact'] = work_position
-        if description is not None:
+        if description is not None and description != '':
             search['description__icontains'] = description
         if skills is not None:
             # Loop through all the skills and add them to the search
@@ -201,7 +201,7 @@ class User(me.DynamicDocument):
 
         # Perform the search
         users = User.objects(**search).all()
-        return users[offset:limit], users.count()
+        return users[offset:limit+offset], users.count()
 
     def add_repo(self, url):
         """Adds a repo to the user's portfolio items.

@@ -27,17 +27,17 @@ function add_school(entity, index) {
 
     text_column_div.innerHTML += "<label class='col control-label'>School Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
-        "<input name='school_name[]' id='school_" + index + "_name_input' class='form-control column' type='text' placeholder='School...' />" +
+        "<input onkeyup='validate_all()' name='school_name[]' id='school_" + index + "_name_input' class='form-control column' type='text' placeholder='School...' />" +
         "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label'>Degree (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
-        "<input name='school_degree[]' id='school_" + index + "_degree_input' class='form-control column' type='text' placeholder='Degree...' />" +
+        "<input onkeyup='validate_all()' name='school_degree[]' id='school_" + index + "_degree_input' class='form-control column' type='text' placeholder='Degree...' />" +
         "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>" +
     "<div class='col'> " +
-        "<input name='school_start_date[]' id='school_" + index + "_start_date_input' class='form-control' type='date'/>" +
+        "<input onkeyup='validate_all()' name='school_start_date[]' id='school_" + index + "_start_date_input' class='form-control' type='date'/>" +
     "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >End Date (Or Estimated End Date):</label>" +
@@ -45,11 +45,19 @@ function add_school(entity, index) {
         "<input name='school_end_date[]' id='school_" + index + "_end_date_input' class='form-control' type='date'/>" +
     "</div>";
 
+    add_validation(document.getElementById("school_" + index + "_name_input"));
+    add_validation(document.getElementById("school_" + index + "_degree_input"));
+    add_validation(document.getElementById("school_" + index + "_start_date_input"));
+    validate_all();
 }
 
 
 
 function remove_school(entity){
     console.log("removing skill...")
+    remove_validation(entity.id + "_name_input");
+    remove_validation(entity.id + "_degree_input");
+    remove_validation(entity.id + "_start_date_input");
+    validate_all()
     entity.parentNode.removeChild(entity);
 }

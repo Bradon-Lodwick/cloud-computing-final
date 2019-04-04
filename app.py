@@ -52,6 +52,15 @@ auth0 = oauth.register(
 )
 
 
+def get_browser_type(user_agent_string):
+    if any(phone in user_agent_string.lower() for phone in ['android', 'iphone', 'blackberry']):
+        browser = 'mobile'
+    else:
+        browser = 'desktop'
+
+    return browser
+
+
 def get_current_user():
     """Retrieves the current session's user from the database."""
 
@@ -67,13 +76,13 @@ def home():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-
     if request.method == 'POST':
         # Get the selected skills
         if 'skills[]' in request.values:
             skills = request.values.getlist('skills[]')
         else:
-            skills = None
+            skills = []
+
         # Get the plaintext information from the form
         name = request.values.get('name')
         school_name = request.values.get('school_name')
@@ -81,14 +90,36 @@ def search():
         description = request.values.get('description')
 
         # Get the limit and offset information from the form
-        limit = request.values.get('limit')
-        offset = request.values.get('offset')
+        try:
+            limit = int(request.values.get('limit'))
+        except ValueError:
+            limit = 50
+        try:
+            offset = int(request.values.get('offset'))
+            # Force into bounds
+            if offset < 0:
+                offset = 0
+        except ValueError:
+            offset = 0
 
         # Get the users from the search
-        users = db.Users.search(name=name, school_name=school_name, work_position=work_position,
-                                description=description, skills=skills, limit=limit, offset=offset)
+        users, count = db.User.search(name=name, school_name=school_name, work_position=work_position,
+                                      description=description, skills=skills, limit=limit, offset=offset)
 
-    return render_template('search.html', skills=constants.skills)
+        # Calculate the new offset
+        new_offset = offset + len(users)
+
+        # Get the current browser type from the user agent string
+        browser = get_browser_type(request.headers.get('User-Agent'))
+
+        # Send back the search results page
+        return render_template('results.html', name=name, school_name=school_name, work_position=work_position,
+                               description=description, skills=skills, limit=limit, offset=new_offset,
+                               old_offset=offset, results=users, browser=browser, count=count)
+
+    else:
+        # Send back the search page
+        return render_template('search.html', skills=constants.skills, limit=20, offset=0)
 
 
 @app.route('/login')
@@ -123,6 +154,7 @@ def callback_handling():
     # Store the user information in flask session.
     session['logged_in'] = True
     session['jwt_payload'] = userinfo
+
     session['profile'] = {
         'user_id': user.user_id,
         'name': user.name_normalized,
@@ -186,18 +218,31 @@ def edit_dashboard():
 
             # Get the work information from the form
             work_names = request.form.getlist('work_name[]')
-            work_urls = request.form.getlist('work_url[]')
             work_position = request.form.getlist('work_position[]')
             work_start_dates = request.form.getlist('work_start_date[]')
             work_end_dates = request.form.getlist('work_end_date[]')
             # Create the work history list
             work_history = list()
-            for name, url, position, start_date, end_date in zip(work_names, work_urls, work_position, work_start_dates, work_end_dates):
+            for name, position, start_date, end_date in zip(work_names, work_position, work_start_dates, work_end_dates):
                 # Create the previous work position
-                work = db.Work(name=name, url=url, position=position, start_date=start_date, end_date=end_date)
+                work = db.Work(name=name, position=position, start_date=start_date, end_date=end_date)
                 work_history.append(work)
             # Set the previous work
             user.work_history = work_history
+
+            # Get the school information from the form
+            school_names = request.form.getlist('school_name[]')
+            school_degrees = request.form.getlist('school_degree[]')
+            school_start_dates = request.form.getlist('school_start_date[]')
+            school_end_dates = request.form.getlist('school_end_date[]')
+            # Create the education history list
+            education_history = list()
+            for name, degree, start_date, end_date in zip(school_names, school_degrees, school_start_dates, school_end_dates):
+                # Create the school
+                school = db.School(name=name, degree=degree, start_date=start_date, end_date=end_date)
+                education_history.append(school)
+            # Set the education field
+            user.education = education_history
 
             # Get the text information from the form
             data = request.form
@@ -228,10 +273,13 @@ def dashboard():
 @app.route('/testpage')
 def test():
     """A page for testing"""
-    if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
-        browser = 'mobile'
-    else:
-        browser = 'desktop'
+
+    #if any(phone in request.headers.get('User-Agent').lower() for phone in ['android', 'iphone', 'blackberry']):
+    #    browser = 'mobile'
+    #else:
+    #    browser = 'desktop'
+
+    browser = get_browser_type(request.headers.get('User-Agent'))
 
     projects = [
         {
@@ -268,6 +316,13 @@ def test():
         }
     ]
     return render_template('testpage.html', browser=browser, projects=projects)
+
+
+@app.route('/portfolio/new-project', methods=['GET', 'POST'])
+@requires_auth
+def add_portfolio_item():
+    user = get_current_user()
+    return render_template('create_item.html', item_types=constants.item_types, user=user)
 
 
 # Run the app if this is the main file

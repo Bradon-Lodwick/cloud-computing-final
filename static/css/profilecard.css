@@ -1,0 +1,156 @@
+.profileCardDiv-right {
+	margin-top: 32px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 32px;
+
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	/*width: 500px;*/
+	flex-basis: 45%;
+}
+
+.profileCardDiv-left {
+	margin-top: 32px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 32px;
+
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	/*width: 500px;*/
+	flex-basis: 45%;
+}
+
+
+.profileCardDiv-compact {
+	margin-top: 32px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 32px;
+
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 8px;
+	padding-bottom: 0px;
+
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	/*width: 400px;*/
+	flex-basis: 75%
+}
+
+.profileCardGrid-right {
+	background-color: #ffffff;
+	display: grid;
+	grid-template-columns: auto 200px;
+	grid-template-rows: auto auto auto;
+	grid-template-areas:
+	'header pic'
+	'info pic'
+	'more pic';
+
+}
+
+.profileCardGrid-left {
+	background-color: #ffffff;
+	display: grid;
+	grid-template-columns: 200px auto;
+	grid-template-rows: auto auto auto;
+	grid-template-areas:
+	'pic header'
+	'pic info'
+	'pic more';
+
+}
+
+.profileCardGrid-compact {
+	background-color: #ffffff;
+	display: grid;
+	grid-template-areas:
+	'header'
+	'pic'
+	'info'
+	'more';
+}
+
+.profileTitle {
+	grid-area: header;
+}
+
+.title {
+	text-align: center;
+	font-family: "Lucida Sans Unicode";
+}
+
+.moreInfo-right {
+	text-align: left;
+	grid-area: more;
+	align-self: end;
+}
+
+.moreInfo-left {
+	text-align: right;
+	grid-area: more;
+	align-self: end;
+}
+
+.moreInfo-compact {
+	text-align: left;
+	grid-area: more;
+	align-self: end;
+}
+
+.picture-right {
+	text-align: right;
+	grid-area: pic;
+}
+
+.picture-left {
+	text-align: left;
+	grid-area: pic;
+}
+
+.picture-compact {
+	text-align: center;
+	grid-area: pic;
+}
+.information {
+	grid-area: info;
+}
+.information-compact {
+	text-align: center;
+	grid-area: info;
+}
+
+.description {
+	padding-right: 16px;
+	padding-left: 16px;
+	font-family: "Lucida Sans Unicode";
+	font-size: 14px;
+}
+
+.linkText:link, .linkText:visited {
+	background-color: #232334;
+	color: white;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.linkText:hover, .linkText:active {
+	background-color: #363646;
+	color: white;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}

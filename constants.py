@@ -27,3 +27,11 @@ associated_with = [
     'Volunteer',
     'Other',
 ]
+
+item_types = [
+    'repo',
+    'image',
+    'pdf',
+    'file',
+    'youtube'
+]

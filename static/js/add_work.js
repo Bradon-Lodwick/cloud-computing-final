@@ -27,7 +27,7 @@ function add_work(entity, index) {
 
     text_column_div.innerHTML += "<label class='col control-label'>Company Name (Required):</label>"
     text_column_div.innerHTML += "<div class='col'> " +
-        "<input name='work_name[]' id='work_" + index + "_name_input' class='form-control column' type='text' placeholder='Company Name' />" +
+        "<input onkeyup='validate_all()' name='work_name[]' id='work_" + index + "_name_input' class='form-control column' type='text' placeholder='Company Name' />" +
         "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label'>Position Title:</label>"
@@ -50,19 +50,25 @@ function add_work(entity, index) {
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >Start Date (Required):</label>" +
     "<div class='col'> " +
-        "<input name='job_start_date[]' id='job_" + index + "_start_date_input' class='form-control' type='date'/>" +
+        "<input onkeyup='validate_all()' name='work_start_date[]' id='work_" + index + "_start_date_input' class='form-control' type='date'/>" +
     "</div>";
 
     text_column_div.innerHTML += "<label class='col control-label' style='margin-top: 10px' >End Date:</label>" +
     "<div class='col'> " +
-        "<input name='job_end_date[]' id='job_" + index + "_end_date_input' class='form-control' type='date'/>" +
+        "<input name='workend_date[]' id='work_" + index + "_end_date_input' class='form-control' type='date'/>" +
     "</div>";
 
+    add_validation(document.getElementById("work_" + index + "_name_input"));
+    add_validation(document.getElementById("work_" + index + "_start_date_input"));
+    validate_all();
 }
 
 
 
 function remove_work(entity){
     console.log("removing skill...")
+    remove_validation(entity.id + "_name_input");
+    remove_validation(entity.id + "_start_date_input");
+    validate_all()
     entity.parentNode.removeChild(entity);
 }
