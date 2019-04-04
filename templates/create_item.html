@@ -32,6 +32,7 @@ Create Portfolio Item
                 {% for type in item_types %}
                 {% if type == 'file' %}
                 <option value="{{ type }}" selected="selected">{{ type }}</option>
+                {% elif type == 'repo' and not user.is_github_user %}
                 {% else %}
                 <option value="{{ type }}">{{ type }}</option>
                 {% endif %}
