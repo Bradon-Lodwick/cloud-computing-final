@@ -6,7 +6,7 @@ Create Portfolio Item
 
 {% block content %}
 <div class="container">
-    <form action="{{ url_for('add_portfolio_item') }}" method="POST">
+    <form action="{{ url_for('add_portfolio_item') }}" method="POST" enctype="multipart/form-data">
         <div class="form-group col-md-12">
             <h1>Create New Project</h1>
         </div>
@@ -14,14 +14,14 @@ Create Portfolio Item
         <div id="general-input">
             <!-- title input -->
             <div class="form-group col-md-12">
-                <input class="form-control input-lg" id="title-input" type="text" placeholder="Title" aria-label="Title">
+                <input class="form-control input-lg" id="title-input" name="title-input" type="text" placeholder="Title" aria-label="Title">
                 <hr class="col-12">
             </div>
 
             <!-- description input -->
             <div class="form-group col-md-12">
                 <label class="input-group-text" id="description-label">Description</label>
-                <textarea id="description-input" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-label" rows="10"></textarea>
+                <textarea id="description-input" name="description-input" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-label" rows="10"></textarea>
             </div>
         </div>
 
@@ -39,21 +39,45 @@ Create Portfolio Item
             </select>
         </div>
 
+        <!-- file input -->
         <div class="form-group col-md-8" id="file-upload-group">
             <label for="file-input">Upload File</label>
             <div class="input-group">
                 <label class="input-group-btn">
-                    <span class="btn btn-primary">
-                        Browse… <input type="file" name="file-input" id="file-input" style="display: none;" multiple="">
-                    </span>
+                    <label class="btn btn-primary" for="file-input">
+                        Browse… <input type="file" name="file-input" id="file-input" class="form-control-file" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;">
+                    </label>
                 </label>
                 <input type="text" id="file-name" class="form-control" readonly="">
                 <label class="input-group-btn">
                     <span class="btn btn-default">
-                        Clear file <input type="button" id="clear-file" style="display: none;" multiple="">
+                        Clear file <input type="button" id="clear-file" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;">
                     </span>
                 </label>
             </div>
+        </div>
+
+        <!-- image upload section -->
+        <div id="image-group" class="form-group col-md-12" hidden>
+            <label for="image-input">Upload Image</label>
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <label class="btn btn-primary" for="image-input">
+                        Browse… <input type="file" name="image-input" id="image-input" class="form-control-file" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;">
+                    </label>
+                </label>
+                <input type="text" id="image-name" class="form-control" readonly="">
+                <label class="input-group-btn">
+                    <span class="btn btn-default">
+                        Clear file <input type="button" id="clear-image" style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;">
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" id="youtube-group" hidden>
+            <label>Youtube URL</label>
+            <input type="url" class="form-control" name="youtube-url" id="youtube-url" placeholder="https://youtube.com/...." disabled>
         </div>
 
         <!-- repo selection -->
@@ -110,6 +134,10 @@ Create Portfolio Item
 <script src="{{ url_for('static', filename='js/select_project_type.js') }}" type="text/javascript"></script>
 <!-- helps pass the user's id and whether or not they are a github user into the page -->
 <script type="text/javascript">
-    var github_id = {{ user.get('github_id', none) }};
+    {% if user.is_github_user %}
+    var github_id = {{ user.github_identity.user_id }};
+    {% else %}
+    var github_id = null;
+    {% endif %}
 </script>
 {% endblock %}

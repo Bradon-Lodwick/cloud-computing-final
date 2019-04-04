@@ -24,14 +24,15 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 
 class PortfolioItem(me.EmbeddedDocument):
-    _id = me.ObjectIdField()
+    _id = me.ObjectIdField(required=True, default=ObjectId)
     item_type = me.StringField(choices=[])
     title = me.StringField()
     description = me.StringField()
+    file = me.EmbeddedDocumentField(File)
 
     # The given portfolio item types should only have 1 present, and the type will be loaded based on the item_type
     repo = me.EmbeddedDocumentField(Repo)
-    file = me.EmbeddedDocumentField(File)
+    image = me.EmbeddedDocumentField(File)
     youtube = me.URLField()
 
 
@@ -64,6 +65,7 @@ class Work(me.EmbeddedDocument):
 
 class Identity(me.DynamicEmbeddedDocument):
     """Represents an identity the user connects with in the database."""
+    user_id = me.DynamicField(required=True, unique=True)
     provider = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
     isSocial = me.BooleanField(required=True, default=False)
     connection = me.StringField(required=True, choices=['github', 'facebook', 'google-oauth2'])
@@ -218,6 +220,7 @@ class User(me.DynamicDocument):
 
             self.portfolio.append(new_item)
             self.save()
+            return new_item._id
         else:
             raise exc.IdentityError(self.user_id, 'github')
 
