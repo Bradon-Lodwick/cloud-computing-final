@@ -10,6 +10,7 @@ import logging
 import os
 import sys
 from authlib.flask.client import OAuth
+from bson import ObjectId
 from datetime import datetime
 from flask import Flask, session, redirect, render_template, url_for, request
 from six.moves.urllib.parse import urlencode
@@ -323,7 +324,55 @@ def test():
 @requires_auth
 def add_portfolio_item():
     user = get_current_user()
-    return render_template('create_item.html', item_types=constants.item_types, user=user)
+
+    if request.method == 'POST':
+        # Get all the info from the form
+        item_type = request.form.get('type-input')
+        # Handle repos
+        if item_type == 'repo' and user.is_github_user:
+            repo_api_url = request.form.get('repo-api-url')
+            new_item_id = user.add_repo(repo_api_url)
+        # Handle all others that have input files
+        else:
+            # Get general fields
+            # Get the title
+            title = request.form.get('title-input')
+            # Get the description
+            description = request.form.get('description-input')
+
+            # Will hold the fields to pass into the portfolio item
+            item_fields = {
+                'title': title,
+                'description': description,
+                'item_type': item_type
+            }
+
+            # Get the file input
+            file_field = request.files.get('file-input')
+            if file_field.content_length != 0:
+                file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['file'] = file
+
+            # Check for item type to get other fields
+            if item_type == 'youtube':
+                youtube = request.form.get('youtube-input')
+                item_fields['youtube'] = youtube
+            elif item_type == 'image':
+                image_field = request.files.get('image-input')
+                image = File(file=image_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                item_fields['image'] = image
+
+            # Save the portfolio item
+            new_item = db.PortfolioItem(**item_fields)
+            user.portfolio.append(new_item)
+            user.save()
+            new_item_id = new_item._id
+
+        # Get the new item's id to display the portfolio item's page
+        # TODO replace the return with proper return
+        return render_template('create_item.html', item_types=constants.item_types, user=user)
+    else:
+        return render_template('create_item.html', item_types=constants.item_types, user=user)
 
 
 # Run the app if this is the main file
