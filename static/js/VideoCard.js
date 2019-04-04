@@ -52,13 +52,16 @@ class VideoCard extends React.Component {
 
 		var video_side = (
             <div className="col-md-8">
-                <iframe
-                    width="100%"
-                    src={this.props.url.replace('/watch?v=', '/embed/')}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                />
+                <div class="video-container">
+                    <iframe
+                        width="100%"
+                        height="100%"
+                        src={this.props.url.replace('/watch?v=', '/embed/')}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                </div>
             </div>
 		)
 

@@ -24,7 +24,7 @@ class DashboardCard extends React.Component {
 	render() {
 		var cardType;
 
-		if (this.state.width > 900) {
+		if (this.state.width > 1000) {
 			cardType = "";
 		}
 		else {
