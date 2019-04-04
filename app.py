@@ -339,17 +339,18 @@ def test():
     return render_template('testpage.html', browser=browser, projects=projects)
 
 
-@app.route('/portfolio/<user>', methods=['GET'])
-def portfolio():
+@app.route('/<user_id>/portfolio', methods=['GET'])
+def portfolio(user_id):
 
-    # Make sure user exists
+    # TODO: Sanitize the user_id before throwing it at the database
 
-    # Load projects from DB
+    # Get the selected user from the database
+    user = db.User.objects(_id=user_id)[0]
 
-
-
-    # TODO: Everything
-    return render_template('portfolio.html')
+    # TODO: Check for invalid user
+    
+    # Return the portfolio page
+    return render_template('portfolio.html', user=user)
 
 
 @app.route('/portfolio/new-project', methods=['GET', 'POST'])
