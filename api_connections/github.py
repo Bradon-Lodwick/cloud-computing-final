@@ -17,6 +17,7 @@ class Repo(me.DynamicEmbeddedDocument):
     """Defines a repository object from github."""
 
     name = me.StringField(required=True)
+    full_name = me.StringField(required=True)
     html_url = me.URLField(required=True)
     description = me.StringField()
     language = me.StringField()
@@ -27,7 +28,7 @@ class Repo(me.DynamicEmbeddedDocument):
     # Needs to be loaded from the contributors url
     contributions = me.IntField(required=True)
 
-    def __init__(self, url, user_id=None, **kwargs):
+    def __init__(self, url=None, user_id=None, **kwargs):
         """Creates a new repo from the given url.
 
         Args:
@@ -39,7 +40,7 @@ class Repo(me.DynamicEmbeddedDocument):
         """
 
         # Get the repo information
-        if user_id is not None:
+        if user_id is not None and url is not None:
             # Get the repo information
             repo_result = request('GET', url)
             repo_json = repo_result.json()
