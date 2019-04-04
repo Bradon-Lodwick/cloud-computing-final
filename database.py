@@ -206,21 +206,28 @@ class User(me.DynamicDocument):
         users = User.objects(**search).all()
         return users[offset:limit+offset], users.count()
 
-    def add_repo(self, url):
+    def add_repo(self, url, old_project=None):
         """Adds a repo to the user's portfolio items.
 
         Args:
             url (str): The url to the repo.
+            old_project (Repo): The old project with the repo in it. If set, the repo is updated rather than added.
         """
 
         # Only can add the repo if the user is a github user
         if self.is_github_user:
             new_repo = Repo(url, self.github_identity.user_id)
-            new_item = PortfolioItem(item_type='repo', repo=new_repo)
+            if old_project is None:
+                new_item = PortfolioItem(item_type='repo', repo=new_repo)
+                self.portfolio.append(new_item)
+                project_id = new_item._id
+            # Update the repo
+            else:
+                old_project.repo = new_repo
+                project_id = old_project._id
 
-            self.portfolio.append(new_item)
             self.save()
-            return new_item._id
+            return project_id
         else:
             raise exc.IdentityError(self.user_id, 'github')
 

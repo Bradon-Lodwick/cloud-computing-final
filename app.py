@@ -6,13 +6,14 @@ __credits__ = ["Bradon Lodwick", "Reid Butson", "Chris Macleod", "Thomas Reis"]
 __version__ = "1.0.0"
 __status__ = "Production"
 
+import bson
 import logging
 import os
 import sys
 from authlib.flask.client import OAuth
 from bson import ObjectId
 from datetime import datetime
-from flask import Flask, session, redirect, render_template, url_for, request
+from flask import Flask, session, redirect, render_template, url_for, request, abort
 from six.moves.urllib.parse import urlencode
 
 import database as db
@@ -382,7 +383,7 @@ def add_portfolio_item():
 
             # Get the file input
             file_field = request.files.get('file-input')
-            if file_field.content_length != 0:
+            if file_field.mimetype != 'application/octet-stream':
                 file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
                 item_fields['file'] = file
 
@@ -406,6 +407,80 @@ def add_portfolio_item():
         return render_template('create_item.html', item_types=constants.item_types, user=user)
     else:
         return render_template('create_item.html', item_types=constants.item_types, user=user)
+
+
+@app.route('/portfolio/edit/<item_id>', methods=['GET', 'POST'])
+@requires_auth
+def edit_portfolio_item(item_id):
+    user = get_current_user()
+    try:
+        searched_id = ObjectId(item_id)
+    except bson.errors.InvalidId:
+        return abort(404)
+    # Check the user's portfolio items to see if the requested item is in it.
+    try:
+        old_item = next(item for item in user.portfolio if item._id == searched_id)
+    except StopIteration:
+        return abort(404)
+
+    if request.method == 'POST':
+        # Check if the item needs to be deleted
+        delete = request.form.get('delete')
+        if delete is None:
+            # Handle repos
+            if old_item.item_type == 'repo' and user.is_github_user:
+                repo_api_url = request.form.get('repo-api-url')
+                # Update the repo
+                user.add_repo(repo_api_url, old_item)
+            # Handle all others that have input files
+            else:
+                # Get general fields
+                # Get the title
+                title = request.form.get('title-input')
+                # Get the description
+                description = request.form.get('description-input')
+
+                # Will hold the fields to pass into the portfolio item
+                item_fields = {
+                    'title': title,
+                    'description': description,
+                }
+
+                # Get the file input
+                file_field = request.files.get('file-input')
+                if file_field.mimetype != 'application/octet-stream':
+                    # Delete the old file if it exists
+                    if old_item.file is not None:
+                        old_item.file.delete()
+                    file = File(file=file_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                    old_item.file = file
+
+                # Check for item type to get other fields
+                if old_item.item_type == 'youtube':
+                    youtube = request.form.get('youtube-input')
+                    item_fields['youtube'] = youtube
+                elif old_item.item_type == 'image':
+                    # Delete the old file if it exists
+                    if old_item.image is not None:
+                        old_item.image.delete()
+                    image_field = request.files.get('image-input')
+                    image = File(file=image_field, public_key="{}/files/{}".format(user.user_id, ObjectId()))
+                    old_item.image = image
+
+                # Update the portfolio item
+                for field, value in item_fields.items():
+                    setattr(old_item, field, value)
+                user.save()
+        # Delete the item
+        else:
+            user.update(pull__portfolio=old_item)
+            user.save()
+
+        # Get the new item's id to display the portfolio item's page
+        # TODO replace the return with proper return
+        return render_template('edit_item.html', item_types=constants.item_types, user=user, item=old_item)
+    else:
+        return render_template('edit_item.html', item_types=constants.item_types, user=user, item=old_item)
 
 
 # Run the app if this is the main file
