@@ -12,19 +12,19 @@ Home
     <br />
 
     <div class="text-center mt-4">
-        <a class="btn-x1 btn-outline-light" href="{{ url_for('login') }}">
-            Create Profile
-        </a>
-        <a class="btn-x1 btn-outline-light" href="{{ url_for('search') }}">
-            Search Profiles
-        </a>
+      <label>
+        Are you a recruiter?
+      </label>
+      <a class="btn-x1 btn-outline-light" href="{{ url_for('search') }}">
+          Search Profiles!
+      </a>
     </div>
 </div>
-<div>
-  <div id="card_container" style="background-color: white"></div>
+<div class="container">
+  <div id="card_container"></div>
 </div>
 
-<div class="col-sm-12 col-md-12 col-lg-12 container">
+<div class="container">
   <div class="col-lg-3 col-md-3 col-sm-3">
       <img  id="portfolio_img" src="https://i.imgur.com/7h0JauW.jpg" class="img-responsive" alt="Portfolio">
   </div>
