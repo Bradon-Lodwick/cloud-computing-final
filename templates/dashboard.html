@@ -4,44 +4,48 @@
 {% endblock %}
 
 {% block content %}
-<div style="text-align: center;">
+<div class="container" style="text-align: center;">
     <div id="dashboard-card"></div>
 </div>
 
-<div style="background-color: white; padding: 16px;">
-    <h2>Education</h2>
-    <div style="grid-template-columns: auto auto auto auto; display: grid; grid-gap: 8px">
-    {% for school in user.education %}
-        <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-            <h3> {{ school.name }} </h3>
-            <h4> {{ school.degree }}</h4>
-            <p> {{ school.start_date }} - {{ school.end_date }}</p>
-        </div>
-    {% endfor %}
+<div class="container" style="background-color: white; padding: 16px; text-align:centre;">
+    <div class="col-md-12">
+        <h2>Education</h2>
     </div>
-    <h2>Employment History</h2>
-    <div style="grid-template-columns: auto auto auto auto; display: grid; grid-gap: 8px">
-    {% for job in user.work_history %}
-        <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-            <h3> {{ job.name }} </h3>
-            <h4> {{ job.position }}</h4>
-            <p> {{ job.description }}</p>
-            <p> {{ job.start_date }} - {{ job.end_date }}</p>
-        </div>
-    {% endfor %}
+    <div class="col-md-12">
+        {% for school in user.education %}
+            <div class="shadow-box">
+                <h3> {{ school.name }} </h3>
+                <h4> {{ school.degree }}</h4>
+                <p> {{ school.start_date }} - {{ school.end_date }}</p>
+            </div>
+        {% endfor %}
     </div>
-    <h2>Awards</h2>
-    <div style="grid-template-columns: auto auto auto auto; display: grid; grid-gap: 8px">
-    {% for award in user.awards %}
-        <div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1)">
-            <h3> {{ award.name }} </h3>
-            <h4> {{ award.description }}</h4>
-            <p> Awarded By: {{ award.issuer }}</p>
-            <p> {{ award.date }}</p>
-        </div>
-    {% endfor %}
+    <div class="col-md-12">
+        <h2>Employment History</h2>
+        {% for job in user.work_history %}
+            <div class="shadow-box">
+                <h3> {{ job.name }} </h3>
+                <h4> {{ job.position }}</h4>
+                <p> {{ job.description }}</p>
+                <p> {{ job.start_date }} - {{ job.end_date }}</p>
+            </div>
+        {% endfor %}
     </div>
-    <h2>Portfolio</h2>
+    <div class="col-md-12">
+        <h2>Awards</h2>
+        {% for award in user.awards %}
+            <div class="shadow-box">
+                <h3> {{ award.name }} </h3>
+                <h4> {{ award.description }}</h4>
+                <p> Awarded By: {{ award.issuer }}</p>
+                <p> {{ award.date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-12">
+        <h2>Portfolio</h2>
+    </div>
     <div id="card_container"></div>
 </div>
 {% endblock %}

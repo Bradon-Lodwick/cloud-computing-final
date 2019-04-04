@@ -38,25 +38,29 @@ class ImageCard extends React.Component {
 		}
 
 		return (
-			<div className={"videoCardDiv" + cardType}>
-				<div className={"videoCardGrid" + cardType}>
-					<div className="videoTitle">
-						<h2 className='title'> {this.props.title} </h2>
-					</div>
-					<div className={"video" + cardType}>
-						<img src={this.props.url} style={{width: 560}}/>
-					</div>
-					<div className={"information" + cardType}>
-						<p className='description'>
-						{this.props.description}
-						</p>
-					</div>
-					{ haslink
-						?	<div className={"moreInfo" + cardType}>
-								<a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
-							</div>
-						: <div />
-					}
+			<div className="col-md-12">
+			    <div className="shadow-box">
+			        <div className="row">
+			            <div className="col-md-4">
+                            <div className="row">
+                                <h2 className='title'> {this.props.title} </h2>
+                            </div>
+                            <div className="row">
+                                <p className='description'>
+                                {this.props.description}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="col-md-8">
+                            <img src={this.props.url} className="image"/>
+                        </div>
+                    </div>
+                    { haslink
+                            ?	<div className={"moreInfo" + cardType}>
+                                    <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
+                                </div>
+                            : <div />
+                        }
 				</div>
 			</div>
 		)
