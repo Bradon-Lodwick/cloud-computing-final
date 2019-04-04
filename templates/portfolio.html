@@ -4,50 +4,6 @@
 {% endblock %}
 
 {% block content %}
-<div style="background-color:#ffffff">
-    <p>Education {{ user.education }}</p>
-    <p>Awards {{ user.awards }}</p>
-    <p>Work History {{ user.work_history }}</p>
-    <p>Portfolio {{ user.portfolio }}</p>
-</div>
-
-<div style="text-align: center;">
-    <div id="dashboard-card"></div>
-</div>
-
-<div style="display: flex; flex-direction: row; flex-wrap: wrap">
-    <div id="work-container" style="display: flex; flex-direction: column; flex-basis: 30%; background-color: white">
-
-    </div>
-    <div id="education-container" style="display: flex; flex-direction: column; flex-basis: 30%; background-color: white">
-
-    </div>
-    <div id="awards-container" style="display: flex; flex-direction: column; flex-basis: 30%; background-color: white">
-
-    </div>
-</div>
-
-
-<!--
-    # Portfolio holds a list of portfolio items for their page
-    portfolio = me.EmbeddedDocumentListField(PortfolioItem)
--->
-
-<!--
-class PortfolioItem(me.EmbeddedDocument):
-    _id = me.ObjectIdField(required=True, default=ObjectId)
-    item_type = me.StringField(choices=[])
-    title = me.StringField()
-    description = me.StringField()
-    file = me.EmbeddedDocumentField(File)
-
-    # The given portfolio item types should only have 1 present, and the type will be loaded based on the item_type
-    repo = me.EmbeddedDocumentField(Repo)
-    image = me.EmbeddedDocumentField(File)
-    youtube = me.URLField()
--->
-
-
 {% endblock %}
 
 
@@ -61,83 +17,117 @@ class PortfolioItem(me.EmbeddedDocument):
 <script src="{{ url_for('static', filename='js/WorkCard.js') }}" type="text/babel"></script>
 <script src="{{ url_for('static', filename='js/EducationCard.js') }}" type="text/babel"></script>
 <script src="{{ url_for('static', filename='js/AwardCard.js') }}" type="text/babel"></script>
-<script type="text/babel">
-            var skills =  {{ user.skills | tojson }}
+<script src="{{ url_for('static', filename='js/ImageCard.js') }}" type="text/babel"></script>
+<script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
 
-            ReactDOM.render(
-				<DashboardCard
-				    name='{{ user.name }}'
-				    email='{{ user.email }}'
-				    url='{{ user.picture_normalized_url }}'
-				    description='{{user.description}}'
-				    skills={skills}
-				    show_button={true}
-				    linkname="Github"
-				    editpage="{{user.html_url}}"
-				/>,
-				document.getElementById('dashboard-card')
+<div class="container" style="text-align: center;">
+    <script type="text/babel">
+                var skills =  {{ user.skills | tojson }}
+
+                ReactDOM.render(
+                    <DashboardCard
+                        name='{{ user.name }}'
+                        email='{{ user.email }}'
+                        url='{{ user.picture_normalized_url }}'
+                        description='{{user.description}}'
+                        skills={skills}
+                        show_button={true}
+                        linkname="Github"
+                        editpage="{{user.html_url}}"
+                    />,
+                    document.getElementById('dashboard-card')
+                );
+    </script>
+</div>
+
+<div class="container" style="text-align: center;">
+    <div id="dashboard-card"></div>
+</div>
+<div class="container" style="background-color: white; padding: 16px; text-align:centre;">
+    <div class="col-md-12">
+        <h2>Education</h2>
+    </div>
+    <div class="col-md-12">
+        {% for school in user.education %}
+            <div class="shadow-box">
+                <h3> {{ school.name }} </h3>
+                <h4> {{ school.degree }}</h4>
+                <p> {{ school.start_date }} - {{ school.end_date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-12">
+        <h2>Employment History</h2>
+        {% for job in user.work_history %}
+            <div class="shadow-box">
+                <h3> {{ job.name }} </h3>
+                <h4> {{ job.position }}</h4>
+                <p> {{ job.description }}</p>
+                <p> {{ job.start_date }} - {{ job.end_date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-12">
+        <h2>Awards</h2>
+        {% for award in user.awards %}
+            <div class="shadow-box">
+                <h3> {{ award.name }} </h3>
+                <h4> {{ award.description }}</h4>
+                <p> Awarded By: {{ award.issuer }}</p>
+                <p> {{ award.date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-12">
+        <h2>Portfolio</h2>
+    </div>
+    <div id="card_container"></div>
+</div>
+
+<script type="text/babel">
+			const Projects = () => {
+				return (
+					<div>
+						{% for project in user.portfolio %}
+
+							{% if  loop.index % 2 == 0 %}
+							{% set ori = "left" %}
+							{% else %}
+							{% set ori = "right" %}
+							{% endif %}
+
+                            {% if project.item_type == 'youtube' %}
+                                <VideoCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                />
+                            {% else %}
+                                <ImageCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url="{{ project.image.url }}"
+                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                />
+                            {% endif %}
+
+
+						{% endfor %}
+					</div>
+				)
+
+			}
+
+			ReactDOM.render(
+				<Projects />,
+				document.getElementById('card_container')
 			);
-</script>
-<script type="text/babel">
-    const Education = () => {
-            return (
-                <React.Fragment>
-                    <h2>Education:</h2>
-                    {% for education in user.education %}
-                        <EducationCard
-                            key="{{ loop.index }}"
-                            school="{{ education.name }}"
-                            degree="{{ education.degree }}"
-                            start_date="{{ education.start_date }}"
-                            end_date="{{ education.end_date }}"
-                        />
-                    {% endfor %}
-                </React.Fragment>
-            );}
-    const Awards = () => {
-            return (
-                <React.Fragment>
-                    <h2>Awards:</h2>
-                    {% for award in user.awards %}
-                        <AwardCard
-                            key="{{ loop.index }}"
-                            issuer="{{ award.issuer }}"
-                            name="{{ award.name }}"
-                            description="{{ award.description }}"
-                            date_received="{{ award.date }}"
-                            associated_with="{{ award.associated_with }}"
-                        />
-                    {% endfor %}
-                </React.Fragment>
-            );}
-    const Jobs = () => {
-            return (
-                <React.Fragment>
-                    <h2>Work Experience:</h2>
-                    {% for job in user.work_history %}
-                        <WorkCard
-                            key="{{ loop.index }}"
-                            title="{{ job.position }}"
-                            company="{{ job.name }}"
-                            description="{{ job.description }}"
-                            start_date="{{ job.start_date }}"
-                            end_date="{{ job.end_date }}"
-                        />
-                    {% endfor %}
-                </React.Fragment>
-            );}
-
-    ReactDOM.render(
-        <Jobs />,
-        document.getElementById('work-container')
-    );
-    ReactDOM.render(
-        <Education />,
-        document.getElementById('education-container')
-    );
-    ReactDOM.render(
-        <Awards />,
-        document.getElementById('awards-container')
-    );
-</script>
+		</script>
 {% endblock %}

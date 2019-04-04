@@ -25,7 +25,7 @@ conn = me.connect(MONGODB_DB, host=MONGODB_URI)
 
 class PortfolioItem(me.EmbeddedDocument):
     _id = me.ObjectIdField(required=True, default=ObjectId)
-    item_type = me.StringField(choices=[])
+    item_type = me.StringField(choices=const.item_types)
     title = me.StringField()
     description = me.StringField()
     file = me.EmbeddedDocumentField(File)
