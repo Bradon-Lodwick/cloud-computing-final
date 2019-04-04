@@ -26,7 +26,7 @@ class ImageCard extends React.Component {
 		var cardType;
 		var haslink = false;
 
-		if (this.props.extraInfo != null){
+		if (this.props.extraInfo != ''){
 			haslink = true;
 		}
 
@@ -64,6 +64,12 @@ class ImageCard extends React.Component {
 			            { this.props.orientation == 'left' ? image_side : text_side }
 			            { this.props.orientation == 'left' ? text_side : image_side }
                     </div>
+                    { this.props.personal_page == 'true'
+                        ?   <div className={"moreInfo" + cardType}>
+                                <a className="linkText" href={this.props.edit_link}>EDIT PROJECT</a>
+                            </div>
+                         : <div />
+                    }
                     { haslink
                         ?	<div className={"moreInfo" + cardType}>
                                 <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>

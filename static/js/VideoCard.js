@@ -69,6 +69,12 @@ class VideoCard extends React.Component {
 			            { this.props.orientation == 'left' ? video_side : text_side }
 			            { this.props.orientation == 'left' ? text_side : video_side }
                     </div>
+                    { this.props.personal_page == 'true'
+                        ?   <div className={"moreInfo" + cardType}>
+                                <a className="linkText" href={this.props.edit_link}>EDIT PROJECT</a>
+                            </div>
+                         : <div />
+                    }
                     { haslink
                         ?	<div className={"moreInfo" + cardType}>
                                 <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>

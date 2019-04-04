@@ -92,29 +92,67 @@
 							{% set ori = "right" %}
 							{% endif %}
 
-                            {% if project.item_type == 'youtube' %}
-                                <VideoCard
-                                    key="{{ loop.index }}"
-                                    title="{{ project.title }}"
-                                    description="{{ project.description }}"
-                                    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                                    orientation="{{ ori }}"
-                                    browser="{{ browser }}"
-                                />
-                            {% else %}
+							{% if project.item_type == 'image' %}
                                 <ImageCard
                                     key="{{ loop.index }}"
                                     title="{{ project.title }}"
                                     description="{{ project.description }}"
                                     url="{{ project.image.url }}"
-                                    extraInfo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                    extraInfo = "{{ project.file.url }}"
                                     orientation="{{ ori }}"
                                     browser="{{ browser }}"
+                                    personal_page='true'
+                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                />
+                            {% elif project.item_type == 'pdf' %}
+                                <ImageCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url='https://cdn.pixabay.com/photo/2017/03/08/21/20/pdf-2127829_960_720.png'
+                                    extraInfo = "{{ project.file.url }}"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                    personal_page='true'
+                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                />
+                            {% elif project.item_type == 'repo' %}
+                                <ImageCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.repo.name }}"
+                                    description="{{ project.repo.description }}"
+                                    url='https://upload.wikimedia.org/wikipedia/commons/c/c6/Font_Awesome_5_brands_github-square.svg'
+                                    extraInfo = "{{ project.repo.html_url }}"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                    personal_page='true'
+                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                />
+                            {% elif project.item_type == 'file' %}
+                                <ImageCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url='https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/File_alt_font_awesome.svg/512px-File_alt_font_awesome.svg.png'
+                                    extraInfo = "{{ project.file.url }}"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                    personal_page='true'
+                                    edit_link="/portfolio/edit/{{ project._id }}"
+                                />
+                            {% elif project.item_type == 'youtube' %}
+                                <VideoCard
+                                    key="{{ loop.index }}"
+                                    title="{{ project.title }}"
+                                    description="{{ project.description }}"
+                                    url="{{ project.youtube }}"
+                                    extraInfo = "{{ project.youtube }}"
+                                    orientation="{{ ori }}"
+                                    browser="{{ browser }}"
+                                    personal_page='true'
+                                    edit_link="/portfolio/edit/{{ project._id }}"
                                 />
                             {% endif %}
-
-
 						{% endfor %}
 					</div>
 				)
