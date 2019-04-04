@@ -66,8 +66,8 @@ Search
 								<ProfileCard
 									key="{{ loop.index }}"
 									name="{{ user.name }}"
-									photo="{{ user.picture }}"
-									url="{{ url_for('home') }}"
+									photo="{{ user.picture_normalized_url }}"
+									url="{{ url_for('portfolio', user_id=user._id) }}"
 									description="{{ user.description }}"
 									orientation="right"
 									browser="{{ browser }}"
@@ -76,8 +76,8 @@ Search
 							    <ProfileCard
 									key="{{ loop.index }}"
 									name="{{ user.name }}"
-									photo="{{ user.picture }}"
-									url="{{ url_for('home') }}"
+									photo="{{ user.picture_normalized_url }}"
+									url="{{ url_for('portfolio', user_id=user._id) }}"
 									description="{{ user.description }}"
 									orientation="left"
 									browser="{{ browser }}"

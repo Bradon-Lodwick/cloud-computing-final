@@ -1,9 +1,16 @@
 {% extends "layout.html" %}
 {% block title %}
-{{ session.profile.name }}'s dashboard | Student Profile Viewer
+{{ session.profile.name }}'s dashboard | Portfol.io
 {% endblock %}
 
 {% block content %}
+<div style="text-align: center;">
+    <div id="dashboard-card"></div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
 
 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -25,9 +32,4 @@
 				document.getElementById('dashboard-card')
 			);
 </script>
-
-
-<div id="dashboard-card"></div>
-
-
 {% endblock %}

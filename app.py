@@ -340,6 +340,20 @@ def test():
     return render_template('testpage.html', browser=browser, projects=projects)
 
 
+@app.route('/<user_id>/portfolio', methods=['GET'])
+def portfolio(user_id):
+
+    # TODO: Sanitize the user_id before throwing it at the database
+
+    # Get the selected user from the database
+    user = db.User.objects(_id=user_id)[0]
+
+    # TODO: Check for invalid user
+    
+    # Return the portfolio page
+    return render_template('portfolio.html', user=user)
+
+
 @app.route('/portfolio/new-project', methods=['GET', 'POST'])
 @requires_auth
 def add_portfolio_item():
