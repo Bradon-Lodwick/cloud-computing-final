@@ -403,8 +403,7 @@ def add_portfolio_item():
             new_item_id = new_item._id
 
         # Get the new item's id to display the portfolio item's page
-        # TODO replace the return with proper return
-        return render_template('create_item.html', item_types=constants.item_types, user=user)
+        return redirect(url_for('dashboard'))
     else:
         return render_template('create_item.html', item_types=constants.item_types, user=user)
 
@@ -477,8 +476,7 @@ def edit_portfolio_item(item_id):
             user.save()
 
         # Get the new item's id to display the portfolio item's page
-        # TODO replace the return with proper return
-        return render_template('edit_item.html', item_types=constants.item_types, user=user, item=old_item)
+        return redirect(url_for('dashboard'))
     else:
         return render_template('edit_item.html', item_types=constants.item_types, user=user, item=old_item)
 
