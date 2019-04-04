@@ -5,7 +5,7 @@ Search
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron text-center">
+<div class="text-center container-fluid" style="background-color: white; padding: 15px">
     <h1>Student Profile Viewer</h1>
     <p>Create your profile and get noticed by employers today!</p>
 
@@ -13,30 +13,61 @@ Search
 
     <form method=post enctype=multipart/form-data action="{{ url_for('search') }}">
         <p>Find users with these skills:</p>
-        <div  style="column-count: 3">
-            {% for skill in skills %}
-                <input type="checkbox" name="skills[]" value="{{ skill }}"> {{ skill }}<br />
+        <div  style="col-md-12">
+            {% for skill_row in skills | batch(4) %}
+            <div class="row">
+                {% for skill in skill_row %}
+                    <div class="col-md-3">
+                        <input type="checkbox" class="form-control" name="skills[]" value="{{ skill }}"> {{ skill }}<br />
+                    </div>
+                {% endfor %}
+            </div>
             {% endfor %}
         </div>
         <br />
         <p>Find users with these attributes:</p>
-        <div  style="column-count: 3">
-            <div>
-                Name: <input type="text" name="name">
+        <div  class="row">
+            <div class="col-md-6" style="margin-top: 10px">
+                <div class="col-md-3">
+                    <label>Name: </label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="name" />
+                </div>
             </div>
-            <div>
-                School: <input type="text" name="school_name">
+            <div class="col-md-6" style="margin-top: 10px">
+                <div class="col-md-3">
+                    <label>School: </label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="school_name" />
+                </div>
             </div>
-            <div>
-                Work Position: <input type="text" name="work_position">
+            <div class="col-md-6" style="margin-top: 10px">
+                <div class="col-md-3">
+                    <label>Work Position: </label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="work_position" />
+                </div>
             </div>
-            <div>
-                Description: <input type="text" name="description">
+            <!-- New Row -->
+            <div class="col-md-6" style="margin-top: 10px">
+                <div class="col-md-3">
+                    <label class="form-label">Description:</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="description" />
+                </div>
             </div>
         </div>
         <input type="hidden" name="limit" value="{{ limit }}">
         <input type="hidden" name="offset" value="{{ offset }}">
-        <input type="submit" value="Submit">
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="margin-top: 10px">
+            <input class="form-control" type="submit" value="Submit">
+        </div>
+        <div class="col-md-4"></div>
     </form>
 
 </div>
