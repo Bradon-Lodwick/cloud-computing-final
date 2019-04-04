@@ -71,8 +71,8 @@ def get_current_user():
 @app.route('/')
 def home():
     """The home page for the app."""
-
-    return render_template('home.html')
+    browser = get_browser_type(request.headers.get('User-Agent'))
+    return render_template('home.html', browser=browser)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -286,6 +286,7 @@ def dashboard():
     if not session['logged_in']:
         return redirect(url_for('home'))
     else:
+        # Get the user's information from the database
         user = get_current_user()
         return render_template('dashboard.html', user=user)
 
