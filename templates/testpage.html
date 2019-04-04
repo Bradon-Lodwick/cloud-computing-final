@@ -3,6 +3,7 @@
 
 <head>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/videocard.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboardcard.css') }}">
 </head>
 
 <html>
@@ -14,10 +15,12 @@
 		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 		<script src="{{ url_for('static', filename='js/VideoCard.js') }}" type="text/babel"></script>
+        <script src="{{ url_for('static', filename='js/DashboardCard.js') }}" type="text/babel"></script>
 
         <div> {{ browser }}</div>
 
         <div id="card_container"></div>
+        <div id="dbc"></div>
 
 		<script type="text/babel">
 			const Projects = () => {
@@ -57,6 +60,19 @@
 				document.getElementById('card_container')
 			);
 		</script>
+        <script type="text/babel">
+            var skills = ['look', 'at', 'all', 'of', 'the', 'skills', 'I', 'have']
+
+            ReactDOM.render(
+				<DashboardCard
+				    name='Testy McTestFace'
+				    email='totallyalegitaddress@gmail.com'
+				    url='https://i.imgur.com/ilTW6QH.jpg'
+				    skills={skills}
+				/>,
+				document.getElementById('dbc')
+			);
+        </script>
 
 		<!-- Custom Components -->
 		<script src="C:/Users/Thanatos/Documents/html/TestReact/react_clock.js" type="text/babel"></script>

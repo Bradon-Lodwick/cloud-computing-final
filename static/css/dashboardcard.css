@@ -1,0 +1,100 @@
+.profile-card-back {
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 900px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.18);
+	padding: 16px;
+	display: inline-grid;
+	grid-template-columns: 300px auto;
+	grid-gap: 32px;
+	grid-template-areas:
+	'image info edit'
+	'image skills skills';
+}
+.profile-card-back-compact {
+    background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.18);
+	padding: 16px;
+	display: inline-grid;
+	grid-template-columns: auto;
+	grid-gap: 8px;
+	grid-template-areas:
+	'image'
+	'edit'
+	'info'
+	'skills';
+}
+
+.profile-image {
+  text-align: center;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.5);
+  border-radius: 150px;
+  background-size: auto 300px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 300px;
+  width: 300px;
+  overflow: hidden;
+  
+  grid-area: image;
+}
+
+.edit-button:link, .edit-button:visited {
+    grid-area: edit;
+    max-height: 50px;
+	background-color: #232334;
+	color: white;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.edit-button:hover, .edit-button:active {
+    grid-area: edit;
+	background-color: #363646;
+	color: white;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.information {
+	text-align: left;
+	grid-area: info;
+}
+
+.information-compact {
+	text-align: center;
+	grid-area: info;
+}
+
+.skills {
+	display: flex;
+	align-items: flex-end;
+	grid-area: skills;
+}
+.skills-grid {
+	min-width: 100%;
+	display: inline-grid;
+	grid-gap: 4px;
+	grid-template-columns: auto auto auto auto;
+}
+
+.skills-grid-compact {
+	min-width: 100%;
+	display: inline-grid;
+	grid-gap: 4px;
+	grid-template-columns: auto auto;
+}
+
+.skill {
+	line-height: 1;
+	color: white;
+	background-color: rgba(30, 82, 127, 255);
+	padding: 8px;
+	border-radius: 4px;
+	text-align: center;
+}
