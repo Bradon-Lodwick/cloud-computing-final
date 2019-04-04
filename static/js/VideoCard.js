@@ -37,33 +37,44 @@ class VideoCard extends React.Component {
 			cardType = "-compact"
 		}
 
+		var text_side = (
+            <div className="col-md-4">
+                <div className="row">
+                    <h2 className='title'> {this.props.title} </h2>
+                </div>
+                <div className="row">
+                    <p className='description'>
+                    {this.props.description}
+                    </p>
+                </div>
+            </div>
+		)
+
+		var video_side = (
+            <div className="col-md-8">
+                <iframe
+                    width="100%"
+                    src={this.props.url.replace('/watch?v=', '/embed/')}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                />
+            </div>
+		)
+
 		return (
-			<div className={"videoCardDiv" + cardType}>
-				<div className={"videoCardGrid" + cardType}>
-					<div className="videoTitle">
-						<h2 className='title'> {this.props.title} </h2>
-					</div>
-					<div className={"video" + cardType}>
-						<iframe
-							width="560"
-							height="315"
-							src={this.props.url.replace('/watch?v=', '/embed/')}
-							frameBorder="0"
-							allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-						/>
-					</div>
-					<div className={"information" + cardType}>
-						<p className='description'>
-						{this.props.description}
-						</p>
-					</div>
-					{ haslink
-						?	<div className={"moreInfo" + cardType}>
-								<a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
-							</div>
-						: <div />
-					}
+		    <div className="col-md-12">
+			    <div className="shadow-box">
+			        <div className="row">
+			            { this.props.orientation == 'left' ? video_side : text_side }
+			            { this.props.orientation == 'left' ? text_side : video_side }
+                    </div>
+                    { haslink
+                        ?	<div className={"moreInfo" + cardType}>
+                                <a className="linkText" href={this.props.extraInfo}>FIND OUT MORE</a>
+                            </div>
+                        : <div />
+                    }
 				</div>
 			</div>
 		)

@@ -37,23 +37,32 @@ class ImageCard extends React.Component {
 			cardType = "-compact"
 		}
 
+		var text_side = (
+            <div className="col-md-4">
+                <div className="row">
+                    <h2 className='title'> {this.props.title} </h2>
+                </div>
+                <div className="row">
+                    <p className='description'>
+                    {this.props.description}
+                    </p>
+                </div>
+            </div>
+		)
+
+		var image_side = (
+            <div className="col-md-8">
+                <img src={this.props.url} className="image"/>
+            </div>
+
+		)
+
 		return (
 			<div className="col-md-12">
 			    <div className="shadow-box">
 			        <div className="row">
-			            <div className={this.props.orientation == 'left' ? "col-md-4" : "col-md-8"}>
-                            <div className="row">
-                                <h2 className='title'> {this.props.title} </h2>
-                            </div>
-                            <div className="row">
-                                <p className='description'>
-                                {this.props.description}
-                                </p>
-                            </div>
-                        </div>
-			            <div className={this.props.orientation == 'left' ? "col-md-8" : "col-md-4"}>
-                            <img src={this.props.url} className="image"/>
-                        </div>
+			            { this.props.orientation == 'left' ? image_side : text_side }
+			            { this.props.orientation == 'left' ? text_side : image_side }
                     </div>
                     { haslink
                         ?	<div className={"moreInfo" + cardType}>
