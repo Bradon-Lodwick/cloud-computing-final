@@ -38,7 +38,7 @@ class ImageCard extends React.Component {
 		}
 
 		var text_side = (
-            <div className="col-md-4">
+            <div className="col-md-6">
                 <div className="row">
                     <h2 className='title'> {this.props.title} </h2>
                 </div>
@@ -51,8 +51,8 @@ class ImageCard extends React.Component {
 		)
 
 		var image_side = (
-            <div className="col-md-8">
-                <img src={this.props.url} className="image"/>
+            <div className="col-md-6">
+                <img src={this.props.url} className="image" width="auto" height="400"/>
             </div>
 
 		)
