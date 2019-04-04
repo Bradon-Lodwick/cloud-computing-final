@@ -33,7 +33,7 @@ class DashboardCard extends React.Component {
 
 		var edit_button = <React.Fragment />;
 		if (this.props.show_button) {
-		    edit_button = <a href={this.props.editpage} className='edit-button'>{this.props.linkname}</a>;
+		    edit_button = (<a href={this.props.editpage} className='edit-button'>{this.props.linkname}</a>);
 		}
 
 
