@@ -25,11 +25,12 @@ function add_skill(entry, arr) {
     b.innerHTML += "<input type='hidden' name='skills[]' value='" + entry_val + "'>";
     /*execute a function when someone clicks on the item value (DIV element):*/
     a.appendChild(b);
+    return true;
   } else {
     /* if the entered value is not one of the specified skills */
     console.log("Skill entered is not valid");
+    return false;
   }
-
 }
 
 function remove_skill(entity){

@@ -236,7 +236,9 @@
     }
 
     function add_skill_handler(){
-        add_skill(document.getElementById("skills_text_input"), skills);
+        if (add_skill(document.getElementById("skills_text_input"), skills)){
+            document.getElementById("skills_text_input").value=''
+        }
     }
 
     function add_work_handler(){
