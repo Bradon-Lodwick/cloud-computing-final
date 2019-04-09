@@ -1,96 +1,95 @@
-function autocomplete(inp, arr) {
+function autocomplete(item, arr) {
     console.log("Autocompleting....")
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
   var currentFocus;
-  /*execute a function when someone writes in the text field:*/
-  inp.addEventListener("input", function(e) {
-      var a, b, i, val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) { return false;}
+  item.addEventListener("input", function(e) {
+      /* grabs the input field's value (eg. Program) so it can compare and autocomplete it */
+      var input_value = item.value;
+      delete_dropdown_items();
+      if (!this.value) { return false;}
       currentFocus = -1;
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", this.id + "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-          /*create a div for each matching element:*/
-          b = document.createElement("div");
-          //Display the completed word (based on autofill entries)
-          b.innerHTML = arr[i];
 
-          /*insert a input field that will hold the current array item's value:*/
-          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-          /*execute a function when someone clicks on the item value (DIV element):*/
-              b.addEventListener("click", function(e) {
-              /*insert the value for the autocomplete text field:*/
-              inp.value = this.getElementsByTagName("input")[0].value;
-              /*close the list of autocompleted values, (or any other open lists of autocompleted values:*/
-              closeAllLists();
+      dropdown_master_div = document.createElement("div");
+      dropdown_master_div.setAttribute("id", "skills_autocomplete_list");
+      dropdown_master_div.setAttribute("class", "autocomplete_items");
+      this.parentNode.appendChild(dropdown_master_div);
+
+      for (var i = 0; i < arr.length; i++) {
+        /* if the current input string given matches the current element in the given array up to the amount entered so far */
+        if (arr[i].substr(0, input_value.length).toUpperCase() == input_value.toUpperCase()) {
+          single_dropdown_div = document.createElement("div");
+          /* sets text within the div to the autocompleted string */
+          single_dropdown_div.innerHTML = arr[i];
+
+          /* creates an input field thats hidden, to allow for the manipulation of these added items/skills */
+          single_dropdown_div.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /* makes it so when any div is clicked it autocompletes the input field and deletes all the other divs */
+          single_dropdown_div.addEventListener("click", function(e) {
+            item.value = this.getElementsByTagName("input")[0].value;
+            delete_dropdown_items();
           });
-          a.appendChild(b);
+          dropdown_master_div.appendChild(single_dropdown_div);
         }
       }
   });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
+  /* Adds a listener whenever a button is pressed on the input field given */
+  item.addEventListener("keydown", function(e) {
+      var item_list = document.getElementById("skills_autocomplete_list");
+      if (item_list == null || item_list == undefined){
+        return
+      }
+
+      all_dropdown_divs = item_list.getElementsByTagName("div");
+      /* If the down arrow key is pressed, move focus and change the active item */
       if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
         currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
+        addActive(all_dropdown_divs);
+      } else if (e.keyCode == 38) {
+        /* If the up arrow key is pressed, move focus and change the active item  */
         currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
+        addActive(all_dropdown_divs);
       } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        /* If the enter key is pressed simulate a click and prevent the default form submission */
         e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
+        if (all_dropdown_divs != null && all_dropdown_divs != undefined){
+            all_dropdown_divs[currentFocus].click();
         }
       }
   });
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
+
+  function addActive(all_dropdown_divs) {
+    if (all_dropdown_divs == null || all_dropdown_divs == undefined){
+        return false;
+    }
+    /* makes no dropdowns active first */
+    removeActive(all_dropdown_divs);
+
+    /* if the current item is out of bounds, bring it back within bounds */
+    if (currentFocus >= all_dropdown_divs.length) {
+        currentFocus = 0;
+    }
+    if (currentFocus < 0){
+        currentFocus = (all_dropdown_divs.length - 1);
+    }
+    /*add class "autocomplete_active":*/
+    all_dropdown_divs[currentFocus].classList.add("autocomplete_active");
   }
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
+
+  function removeActive(items) {
+    /* Makes all divs no longer active */
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove("autocomplete_active");
     }
   }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
+
+  function delete_dropdown_items() {
+    /* deletes all single_dropdown_div items */
+    var x = document.getElementsByClassName("autocomplete_items");
     for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
         x[i].parentNode.removeChild(x[i]);
-      }
-  }
     }
-    /*execute a function when someone clicks in the document:*/
+  }
+    /* sets a listener for if someone clicks off the input field */
     document.addEventListener("click", function (e) {
-        closeAllLists(e.target);
+        delete_dropdown_items();
     });
 }
