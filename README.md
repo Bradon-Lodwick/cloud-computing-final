@@ -19,4 +19,4 @@ For a local environment run pip install -r requirements.txt in the directory to 
 | ENV | development |
   
   
-For the Cloud environment similar environment variables need to be set up, but instead of the environment being set to development it is set to production, and the callback_url is set to your cloud instance url (eg. https://cloud-computing-final.herokuapp.com/callback )
+For the Cloud environment similar environment variables need to be set up, but instead of the environment being set to development it is deleted (setting it to production), and the callback_url is set to your cloud instance url (eg. https://cloud-computing-final.herokuapp.com/callback )
